@@ -11,7 +11,7 @@ class Author extends Model
     use HasFactory;
     protected $table = 'authors';
     public $timestamps = true;
-    protected $fillable = ['name','website','author_rating'];
+    protected $fillable = ['name','website','author_rating', 'photo'];
 
     public function courses(): HasMany
     {

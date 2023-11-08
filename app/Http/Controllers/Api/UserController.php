@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
+
 
 class UserController extends Controller
 {
@@ -20,9 +22,10 @@ class UserController extends Controller
                 'message' => 'Request OK'
             ], 200);
 
-        } catch (\Throwable $error) 
+        } catch (\Exception $error) 
         {
             return response()->json([
+                'message' => 'Error getting users',
                 'error' => $error->getMessage()
             ], 500);
         }
@@ -30,116 +33,125 @@ class UserController extends Controller
 
     public function getUserById($id)
     {
-        try 
-        {
-            $userById = User::find($id);
-            return response()->json([
-                'success' => true,
-                'data' => $userById,
-                'message' => 'Request OK'
-            ], 200);
+        $userById = User::find($id);
 
-        } catch (\Throwable $error) 
+        if (!isset($userById)) 
         {
             return response()->json([
-                'error' => $error->getMessage()
-            ], 500);
+                'message' => 'No user with that id has been found'
+            ], 404);
         }
+
+        return response()->json([
+            'success' => true,
+            'data' => $userById,
+            'message' => 'Request OK'
+        ], 200);
     }
 
     public function createUser(Request $request)
     {
+        $validations = [
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6',
+        ];
+
+        $validations_messages = [
+            'required' => 'El campo :attribute es obligatorio.',
+            'email' => 'El campo :attribute debe ser una dirección de correo válida.',
+            'unique' => 'El campo :attribute ya existe.',
+            'min' => 'El campo :attribute debe tener al menos :min caracteres.',
+        ];
+
         try 
         {
-            $newUser = $request->all();
-   
-            $validator = Validator::make($newUser, [
-                'name' => 'required|string', 
-                'email' => 'required|string', 
-                'password' => 'required|string'
-            ]);
-       
-            if($validator->fails()){
-                return response()->json([
-                    'Check the fields, there is an error' => $validator->errors()
-                ]);         
-            }
-
-            $createdUser = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => $request->password,
-            ]);
-
-            return response()->json([
-                'success' => true,
-                'data' => $createdUser,
-                'message' => 'User created successfully'
-            ], 201);
-
-        } catch (\Throwable $error) 
+            $this->validate($request, $validations, $validations_messages);
+        } catch (ValidationException $error) 
         {
             return response()->json([
-                'error' => $error->getMessage()
-            ], 500);
+                'message' => 'Check the fields, there is an error',
+                'errors' => $error->errors()
+            ], 422); 
         }
+        
+        $createdUser = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'data' => $createdUser,
+            'message' => 'User created successfully'
+        ], 201);
     }
 
     public function updateUser(Request $request, $id)
     {
+        $updatedUser = User::find($id);
+
+        if (!isset($updatedUser)) 
+        {
+            return response()->json([
+                'message' => 'No user with that id has been found'
+            ], 404);
+        }
+        
+        $validations = [
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:6',
+        ];
+
+        $validations_messages = [
+            'required' => 'El campo :attribute es obligatorio.',
+            'email' => 'El campo :attribute debe ser una dirección de correo válida.',
+            'unique' => 'El campo :attribute ya existe.',
+            'min' => 'El campo :attribute debe tener al menos :min caracteres.',
+        ];
+
         try 
         {
-            //$editUser = $request->all();
-   
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|string', 
-                'email' => 'required|string', 
-                'password' => 'required|string'
-            ]);
-       
-            if($validator->fails()){
-                return response()->json([
-                    'Check the fields, there is an error' => $validator->errors()
-                ]);       
-            }
-
-            $updatedUser = User::find($id);
-            $updatedUser->name = $request->name;
-            $updatedUser->email = $request->email;
-            $updatedUser->password = $request->password;
-            $updatedUser->save();
-
-            return response()->json([
-                'success' => true,
-                'data' => $updatedUser,
-                'message' => 'User updated successfully'
-            ], 200);
-
-        } catch (\Throwable $error) 
+            $this->validate($request, $validations, $validations_messages);
+        } catch (ValidationException $error) 
         {
             return response()->json([
-                'error' => $error->getMessage()
-            ], 500);
+                'message' => 'Check the fields, there is an error',
+                'errors' => $error->errors()
+            ], 422); 
         }
+
+        $updatedUser->name = $request->input('name');
+        $updatedUser->email = $request->input('email');
+        $updatedUser->password = Hash::make($request->input('password'));
+        
+        $updatedUser->save();
+
+        return response()->json([
+            'success' => true,
+            'data' => $updatedUser,
+            'message' => 'User updated successfully'
+        ], 200);
     }
 
     public function deleteUser($id)
     {
-        try 
-        {
-            $deletedUser = User::find($id);
-            $deletedUser->delete();
+        $deletedUser = User::find($id);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'User deleted successfully'
-            ], 204);
-        } catch (\Throwable $error) 
+        if (!isset($deletedUser)) 
         {
             return response()->json([
-                'error' => $error->getMessage()
-            ], 500);
+                'message' => 'No user with that id has been found'
+            ], 404);
         }
+        
+        $deletedUser->delete();
 
+        return response()->json([
+            'success' => true,
+            'message' => 'User deleted successfully'
+        ], 200);
     }
 }

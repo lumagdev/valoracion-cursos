@@ -19,6 +19,7 @@ class AuthorSeeder extends Seeder
             'name' => 'Brais Moure',
             'website' => 'https://mouredev.com/',
             'author_rating' => 8.5,
+            'photo' => 'foto autor'
         ]);
     }
 }

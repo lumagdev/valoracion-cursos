@@ -21,6 +21,7 @@ class CourseSeeder extends Seeder
             'website' => 'Youtube',
             'rating' => 8.5,
             'price' => 'Gratis',
+            'cover_image' => 'imagen',
             'questions' => json_encode(['¿Consideras este curso valioso en tiempo?', '¿Es de verdad que el curso es para principiantes?']),
             'author_id' => '56'
         ]);

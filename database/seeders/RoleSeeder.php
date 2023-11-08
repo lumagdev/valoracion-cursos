@@ -18,6 +18,10 @@ class RoleSeeder extends Seeder
         $common = Role::create(['name' => 'common']);
 
         //name de la ruta normalmente
-        //Permission::create(['name' => 'home'])->syncRoles([$admin, $common]);
+        Permission::create(['name' => 'users.allUsers'])->syncRoles($admin);
+        Permission::create(['name' => 'users.userById'])->syncRoles($admin);
+        Permission::create(['name' => 'users.createUser'])->syncRoles($admin);
+        Permission::create(['name' => 'users.updateUser'])->syncRoles($admin);
+        Permission::create(['name' => 'users.deleteUser'])->syncRoles($admin);
     }
 }

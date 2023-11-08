@@ -2,8 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\AuthorController;
 use App\Http\Controllers\Api\UserController;
 
 /*
@@ -35,4 +35,11 @@ Route::middleware(['auth:sanctum'])->group(function ()
     Route::post('/users/create', [UserController::class, 'createUser'])->name('users.createUser');
     Route::put('/users/update/{id}', [UserController::class, 'updateUser'])->name('users.updateUser');
     Route::delete('/users/delete/{id}', [UserController::class, 'deleteUser'])->name('users.deleteUser');
+
+    //Rutas Author
+    Route::get('/authors', [AuthorController::class, 'getAllAuthors'])->name('authors.allAuthors');
+    Route::get('/authors/{id}', [AuthorController::class, 'getAuthorById'])->name('authors.AuthorById');
+    Route::post('/authors/create', [AuthorController::class, 'createAuthor'])->name('authors.createAuthor');
+    Route::put('/authors/update/{id}', [AuthorController::class, 'updateAuthor'])->name('authors.updateAuthor');
+    Route::delete('/authors/delete/{id}', [AuthorController::class, 'deleteAuthor'])->name('authors.deleteAuthor');
 });

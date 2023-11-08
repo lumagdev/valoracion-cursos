@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('website');
             $table->double('rating');
             $table->string('price');
+            $table->string('cover_image');
             $table->json('questions')->nullable();
             $table->unsignedBigInteger('author_id')->index();
             $table->foreign('author_id')->references('id')->on('authors')->cascadeOnDelete();

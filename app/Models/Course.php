@@ -11,7 +11,7 @@ class Course extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name','description','category','location','website','rating','price', 'questions','author_id'];
+    protected $fillable = ['name','description','category','location','website','rating','price', 'cover_image','questions','author_id'];
     protected $casts = [
         'questions' => 'array'
     ];

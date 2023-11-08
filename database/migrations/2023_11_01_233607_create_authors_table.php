@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('website');
             $table->double('author_rating');
+            $table->string('photo');
             $table->timestamps();
         });
     }
