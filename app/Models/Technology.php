@@ -11,7 +11,7 @@ class Technology extends Model
     use HasFactory;
     protected $table = 'Technologies';
     public $timestamps = true;
-    protected $fillable = ['name'];
+    protected $fillable = ['name','image'];
 
     // Relation N:M with technologies
     public function courses(): BelongsToMany

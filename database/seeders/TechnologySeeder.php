@@ -14,11 +14,13 @@ class TechnologySeeder extends Seeder
     {
         DB::table('technologies')->insert([
             'id' => '99',
-            'name' => 'Python'
+            'name' => 'Python',
+            'image' => 'imagen tecnologia',
         ]);
         DB::table('technologies')->insert([
             'id' => '78',
-            'name' => 'Git'
+            'name' => 'Git',
+            'image' => '',
         ]);
     }
 }
