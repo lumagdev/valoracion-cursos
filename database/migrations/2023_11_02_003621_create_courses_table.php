@@ -22,9 +22,13 @@ return new class extends Migration
             $table->string('price');
             $table->string('cover_image');
             $table->json('questions')->nullable();
+
+            $table->timestamps();
+        });
+
+        Schema::table('courses', function (Blueprint $table) {
             $table->unsignedBigInteger('author_id')->index();
             $table->foreign('author_id')->references('id')->on('authors')->cascadeOnDelete();
-            $table->timestamps();
         });
     }
 

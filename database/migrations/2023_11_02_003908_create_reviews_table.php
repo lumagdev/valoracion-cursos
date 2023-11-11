@@ -17,11 +17,15 @@ return new class extends Migration
             $table->string('comment');
             $table->json('answers')->nullable();
             $table->json('questionnaire')->nullable();
+
+            $table->timestamps();
+        });
+
+        Schema::table('reviews', function (Blueprint $table) {
             $table->unsignedBigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('course_id')->unsigned();
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
-            $table->timestamps();
         });
     }
 
