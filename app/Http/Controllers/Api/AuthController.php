@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -23,7 +23,8 @@ class AuthController extends Controller
 
         if ($validator->fails())
         {
-            return response()->json($validator->errors());
+            Log::error('Validation failed: ' . json_encode($validator->errors()));
+            return response()->json(['errors' => $validator->errors()], 400);
         }
 
         $user = User::create(
@@ -33,9 +34,9 @@ class AuthController extends Controller
             'password' => Hash::make($request->password)
         ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
-        // Asigna el rol common por defecto.
         $user->assignRole('common');
+
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json(
             [
@@ -43,7 +44,7 @@ class AuthController extends Controller
                 'access_token' => $token,
                 'token_type' => 'Bearer',
                 'success' => true
-            ], 200);
+            ], 201);
     }
 
     public function login(Request $request)
@@ -54,11 +55,11 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $request['email'])->firstOrFail();
-
+    
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Hi ' . $user->name,
+            'message' => 'Welcome ' . $user->name,
             'access_token' => $token,
             'token_type' => 'Bearer',
             'user' => $user
@@ -68,8 +69,8 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        $request->user()->tokens()->delete();
+        $request->user()->currentAccessToken()->delete();
 
-        return ['message' => 'You have successfully logged out and the token was successfully deleted'];
+        return ['message' => 'You have successfully logged out.'];
     }
 }

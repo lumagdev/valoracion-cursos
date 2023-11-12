@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\AuthorController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\TechnologyController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\CourseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,12 +20,9 @@ use App\Http\Controllers\Api\UserController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 // AUTH
-Route::post('register', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
+Route::post('register', [AuthController::class, 'register'])->withoutMiddleware(['auth:sanctum']);
+Route::post('login', [AuthController::class, 'login'])->withoutMiddleware(['auth:sanctum']);
 
 // Rutas que requieren autenticacion.
 Route::middleware(['auth:sanctum'])->group(function ()
@@ -32,7 +30,7 @@ Route::middleware(['auth:sanctum'])->group(function ()
     Route::get('logout', [AuthController::class, 'logout']);
 
     // Rutas específicas para el rol de 'admin'
-    Route::middleware('checkRole:admin')->group(function () {
+    Route::group(['middleware' => ['role:admin']], function () {
         // Agregar un rol al usuario especifico;
         Route::post('users/assign-role/{id}', [UserController::class, 'assignRole']);
 
@@ -73,10 +71,15 @@ Route::middleware(['auth:sanctum'])->group(function ()
     });
 
     // Rutas específicas para el rol de 'common'
-    Route::middleware('checkRole:common')->group(function () {
+    Route::group(['middleware' => ['role:common']], function () {
+        // Users
         Route::put('/users/update/{id}', [UserController::class, 'updateUser'])->name('users.updateUser');
         Route::delete('/users/delete/{id}', [UserController::class, 'deleteUser'])->name('users.deleteUser');
+        
+        // Courses
+        Route::get('/courses', [CourseController::class, 'getAllCourses'])->name('courses.allCourses');
 
+        // Reviews
         Route::post('/reviews/create', [ReviewController::class, 'createReview'])->name('reviews.createReview');
         Route::put('/reviews/update/{id}', [ReviewController::class, 'updateReview'])->name('reviews.updateReview');
         Route::delete('/reviews/delete/{id}', [ReviewController::class, 'deleteReview'])->name('reviews.deleteReview');

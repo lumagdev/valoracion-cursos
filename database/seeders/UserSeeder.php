@@ -13,6 +13,10 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        // Obtener los roles existentes
+        $adminRole = Role::findByName('admin');
+        $commonRole = Role::findByName('common');
+
         //Creando un usuario admin
         $adminUser = User::create([
             'id' => '1',
@@ -22,7 +26,6 @@ class UserSeeder extends Seeder
         ]);
 
         // Asignar el rol 'common' al usuario común
-        $adminRole = Role::findByName('admin');
         $adminUser->assignRole($adminRole);
 
         $commonUser = User::create([
@@ -33,7 +36,6 @@ class UserSeeder extends Seeder
         ]);
         
         // Asignar el rol 'common' al usuario común
-        $commonRole = Role::findByName('common');
         $commonUser->assignRole($commonRole);
     }
 }

@@ -52,7 +52,7 @@ class User extends Authenticatable
     }
 
     // Define una función que verifica si un usuario tiene un rol específico
-    public function hasRole($role)
+    public function role($role)
     {
         return $this->hasRole($role);
     }
