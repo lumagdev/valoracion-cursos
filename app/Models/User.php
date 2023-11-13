@@ -50,4 +50,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Course::class, 'reviews', 'user_id', 'course_id');
     }
+
+    // Define una función que verifica si un usuario tiene un rol específico
+    public function role($role)
+    {
+        return $this->hasRole($role);
+    }
 }

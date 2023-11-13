@@ -13,11 +13,15 @@ return new class extends Migration
     {
         Schema::create('courses_technologies', function (Blueprint $table) {
             $table->id();
+
+            $table->timestamps();
+        });
+
+        Schema::table('courses_technologies', function (Blueprint $table) {
             $table->unsignedBigInteger('course_id');
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
             $table->unsignedBigInteger('technology_id');
             $table->foreign('technology_id')->references('id')->on('technologies')->onDelete('cascade');
-            $table->timestamps();
         });
     }
 

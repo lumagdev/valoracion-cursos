@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 class UserSeeder extends Seeder
 {
     /**
@@ -13,18 +13,29 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
+        // Obtener los roles existentes
+        $adminRole = Role::findByName('admin');
+        $commonRole = Role::findByName('common');
+
+        //Creando un usuario admin
+        $adminUser = User::create([
             'id' => '1',
             'name' => 'Lucía Gutiérrez',
             'email' => 'lumagc@gmail.com',
             'password' => Hash::make('lumagc2023'),
-        ])->assignRole('admin');
+        ]);
 
-        User::create([
+        // Asignar el rol 'common' al usuario común
+        $adminUser->assignRole($adminRole);
+
+        $commonUser = User::create([
             'id' => '84',
             'name' => 'Aurora Acuaviva Gutiérrez',
             'email' => 'auro@gmail.com',
             'password' => Hash::make('aurora123'),
-        ])->assignRole('common');
+        ]);
+        
+        // Asignar el rol 'common' al usuario común
+        $commonUser->assignRole($commonRole);
     }
 }

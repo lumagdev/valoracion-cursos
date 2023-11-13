@@ -11,7 +11,7 @@ use Database\Seeders\CourseSeeder;
 use Database\Seeders\TechnologySeeder;
 use Database\Seeders\ReviewSeeder;
 use Database\Seeders\CourseTechnologySeeder;
-use Database\Seeders\RoleSeeder;
+use Database\Seeders\RoleAndPermissionSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            RoleSeeder::class,
+            RoleAndPermissionSeeder::class,
             UserSeeder::class,
             AuthorSeeder::class,
             TechnologySeeder::class,

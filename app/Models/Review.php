@@ -16,4 +16,14 @@ class Review extends Model
         'answers' => 'array',
         'questionnaire' => 'array'
     ];
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class);
+    }
 }
