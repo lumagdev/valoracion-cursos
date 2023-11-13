@@ -4,30 +4,34 @@ import routes from "./Routes/routes";
 import { AuthProvider } from "./Context";
 import { VerifyLogin } from "./Components/VerifyLogin";
 import Profile from "./Pages/Profile";
+import Header from "./Components/Header";
+import Footer from "./Components/Footer";
 
 function App() {
     return (
       <AuthProvider>
         <Router>
-          <Routes>
-            {
-              routes.map((route) => (
-                <Route
-                  key={route.path}
-                  path={route.path}
-                  element={route.element}
-                />
-              ))
-            }
-            <Route
-              path="/profile"
-              element={
-                <VerifyLogin redirectTo={'/login'}>
-                  <Profile/>
-                </VerifyLogin>
+          <Header/>
+            <Routes>
+              {
+                routes.map((route) => (
+                  <Route
+                    key={route.path}
+                    path={route.path}
+                    element={route.element}
+                  />
+                ))
               }
-            />
-          </Routes>
+              <Route
+                path="/profile"
+                element={
+                  <VerifyLogin redirectTo={'/login'}>
+                    <Profile/>
+                  </VerifyLogin>
+                }
+              />
+            </Routes>
+          <Footer/>
         </Router>
       </AuthProvider>
     );
