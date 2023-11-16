@@ -1,0 +1,90 @@
+@use "../../Styles/" as *;
+
+.footer
+{
+    background-color: $TURQUOISE;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 0;
+
+    &__section-logo
+    {
+        max-width: 210px;
+        width: 200px;
+        height: 125px;
+        overflow: hidden;
+        border: 4px solid $CANTALOUPE;
+        border-radius: 30px;
+        box-shadow: 1px 6px 5px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+
+        & > img
+        {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+    }
+
+    &__section-contactForm
+    {
+        width: 42%;
+        display: flex;
+        flex-direction: column;
+
+        &__title
+        {
+            font-size: 25px;
+            text-align: center; 
+        }
+        &__form
+        {
+            display: flex;
+            flex-direction: column;
+
+            & > label
+            {
+                font-size: 23px;
+                margin-bottom: 5px;
+            }
+
+            & >input
+            {
+                margin-bottom: 18px;
+            }
+        }
+    }
+
+    &__section-author
+    {
+        display: flex;
+        margin: 25px 0 0 0;
+
+        &__container-icons
+        {
+            display: flex;
+            align-items: center;
+
+            &__icon
+            {
+                font-size: 34px;
+                color: $CANTALOUPE;
+                margin: 0 14px;
+            }
+        }
+
+        &__text
+        {
+            font-size: 23px;
+            margin: 0 40px;
+            text-align: center;
+
+            & > span
+            {
+                font-weight: bold;
+            }
+        }
+    }
+}

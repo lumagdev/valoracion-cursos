@@ -2,10 +2,10 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import routes from "./Routes/routes";
 import { AuthProvider } from "./Context";
-import { VerifyLogin } from "./Components/VerifyLogin";
-import Profile from "./Pages/Profile";
-import Header from "./Components/Header";
-import Footer from "./Components/Footer";
+import { VerifyLogin } from "./Utils/VerifyLogin";
+import Profile from "./Pages/Profile/Profile";
+import Header from "./Components/Header/Header";
+import Footer from "./Components/Footer/Footer";
 
 function App() {
     return (

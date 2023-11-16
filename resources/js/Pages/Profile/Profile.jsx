@@ -1,5 +1,5 @@
 import React from 'react'
-import { useAuthDispatch, logout, useAuthState } from '../Context';
+import { useAuthDispatch, logout, useAuthState } from '../../Context';
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => 
