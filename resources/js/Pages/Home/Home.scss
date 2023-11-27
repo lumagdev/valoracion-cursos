@@ -1,0 +1,355 @@
+@use "../../Styles/" as *;
+
+.main
+{
+    display: flex;
+    flex-direction: column;
+    gap: 160px;
+    padding: 175px 0px 50px 0px;
+
+    @include mobile
+    {
+        padding: 100px 0px 8px 0px;
+        gap: 125px;
+    }
+
+    &__section-cursosPopulares
+    {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center; 
+        &__titulo
+        {
+            margin-bottom: 52px;
+            font-size: 50px;
+            @include mobile
+            {
+                font-size: 32px;
+            }
+        }
+        &__carrousel
+        {
+            width: 50%;
+            background-color: $CANTALOUPE;
+            overflow: hidden;
+            border-radius: 30px;
+            @include mobile
+            {
+                width: 80%;
+            }
+            &__contenido
+            {
+                width: 300%;
+                display: flex;
+                flex-flow: row nowrap;
+                justify-content: space-between;
+                align-items: center;
+                transition: all .5s ease;
+                transform: translateX(0%);
+
+                &__curso
+                {
+                    width: calc(100% / 3);
+                    display: flex;
+                    flex-flow: column wrap;
+                    align-items: center;
+
+                    &__titulo
+                    {
+                        width: 80%;
+                        font-size: 30px;
+                        text-align: center;
+                        margin: 40px 0 5px;
+                        @include mobile
+                        {
+                            font-size: 24px;
+                        }
+                    }
+                    &__puntuacion
+                    {
+                        display: grid;
+                        grid-template-columns: 1fr 1fr;
+                        grid-column-gap: 20px;
+                        align-items: center;
+                        width: 80%;
+
+                        &__contenedorEstrellas
+                        {
+                            justify-self: end;
+                        }
+                    
+                        &__puntaje
+                        {
+                            justify-self: flex-start;
+                            font-size: 20px;
+                            display: flex;
+                            flex-flow: column nowrap;
+                            
+                            & > span
+                            {
+                                font-size: 16px;
+                            }
+                        }
+                        
+                    }
+                    &__contenedorImagen
+                    {
+                        max-width: 100%;
+                        width: 80%;
+                        height: 380px;
+                        overflow: hidden;
+                        cursor: pointer;
+                        border-radius: 10px;
+
+                        @include mobile
+                        {
+                            height: 200px;
+                        }
+                        
+                        & > img
+                        {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                            object-position: center center;
+                        }
+                    }
+                    &__contenedorEtiquetas
+                    {
+                        width: 80%;
+                        margin: 20px 0 30px;
+                        display: flex;
+                        flex-flow: row wrap;
+                        justify-content: space-evenly;
+
+                        & > svg
+                        {
+                            font-size: 35px;
+                            background-color: $TURQUOISE;
+                            padding: 5px;
+                            border-radius: 6px;
+                            @include mobile
+                            {
+                                font-size: 22px;
+                            }
+                        }
+                    }
+                }
+            }
+            &__puntos
+            {
+                width: 100%;                
+                margin: 3em 0 2em;
+                display: flex;
+                flex-flow: row nowrap;
+                justify-content: center;
+                align-items: center;
+
+                @include mobile
+                {
+                    margin: 1em 0 2em;
+                }
+
+                &__punto
+                {
+                    width: 1em;
+                    height: 1em;
+                    margin: 0 1em;
+                    background-color: $TURQUOISE;
+                    cursor: pointer;
+                    border-radius: 8px;
+
+                    &.activo
+                    {
+                        background-color: black;
+                    }
+                }
+            }
+        }
+    }
+
+    &__section-categorias
+    {
+        display: flex;
+        flex-flow: column wrap;
+        align-items: center;
+
+        &__titulo
+        {
+            margin: 40px 0 52px;
+            font-size: 50px;
+
+            @include mobile
+            {
+                font-size: 32px;
+            }
+        }
+
+        &__contenedorCategorias
+        {
+            width: 80%;
+            display: flex;
+            flex-flow: row wrap;
+            justify-content: center;
+            align-content: space-evenly;
+            gap: 40px;
+        
+            &__categoria
+            {
+                width: 18%;
+                background-color: $CANTALOUPE;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                @include mobile
+                {
+                    width: 26%;
+                }
+                & > p
+                {
+                    text-align: center;
+                    font-size: 25px;
+                    font-weight: bold;
+
+                    @include mobile
+                    {
+                        font-size: 18px;
+                    }
+                }
+            }
+        }
+    }
+
+    &__section-desarrolladores
+    {
+        display: flex;
+        flex-flow: column wrap;
+        align-items: center;
+        margin-bottom: 80px;
+
+        &__titulo
+        {
+            margin: 40px 0 52px;
+            font-size: 50px;
+
+            @include mobile
+            {
+                font-size: 32px;
+            }
+        }
+
+        &__carrousel
+        {
+            width: 50%;
+            background-color: $CANTALOUPE;
+            overflow: hidden;
+            border-radius: 30px;
+            @include mobile
+            {
+                width: 80%;
+            }
+
+            &__contenido
+            {
+                width: 300%;
+                display: flex;
+                flex-flow: row nowrap;
+                justify-content: space-between;
+                align-items: center;
+                transition: all .5s ease;
+                transform: translateX(0%);
+
+                &__desarrollador
+                {
+                    width: calc(100% / 3);
+                    display: flex;
+                    flex-flow: column wrap;
+                    align-items: center;
+
+                    &__nombre
+                    {
+                        width: 80%;
+                        font-size: 30px;
+                        text-align: center;
+                        margin: 40px 0 40px;
+
+                        @include mobile
+                        {
+                            font-size: 24px;
+                            margin: 40px 0 30px;
+                        }
+                    }
+                    &__contenedorFotoNombre
+                    {
+                        width: 80%;
+                        display: flex;
+                        flex-flow: row wrap;
+                        justify-content: space-evenly;
+                        align-items: center;
+
+                        &__contenedorFoto
+                        {
+                            max-width: 100%;
+                            width: 24%;
+                            height: 190px;
+                            overflow: hidden;
+                            cursor: pointer;
+                            border-radius: 10px;
+
+                            @include mobile
+                            {
+                                width: 36%;
+                                height: 120px;
+                            }
+
+                            & > img
+                            {
+                                width: 100%;
+                                height: 100%;
+                                object-fit: cover;
+                                object-position: center center;
+                            }
+                        }
+                        &__descripcion
+                        {
+                            width: 58%;
+                            text-align: center;
+                            font-size: 19px;
+
+                            @include mobile
+                            {
+                                font-size: 14px;
+                            }
+                        }
+                    }
+                }
+            }
+
+            &__puntos
+            {
+                width: 100%;                
+                margin: 3em 0 2em;
+                display: flex;
+                flex-flow: row nowrap;
+                justify-content: center;
+                align-items: center;
+
+                &__punto
+                {
+                    width: 1em;
+                    height: 1em;
+                    margin: 0 1em;
+                    background-color: $TURQUOISE;
+                    cursor: pointer;
+                    border-radius: 8px;
+
+                    &.activo
+                    {
+                        background-color: black;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,7 +1,7 @@
 import React from "react";
 import { useFormik } from "formik";
 import { Link, useNavigate } from "react-router-dom";
-import { register } from "../Services/register";
+import { register } from "../../Services/register";
 
 const RegisterForm = () => 
 {

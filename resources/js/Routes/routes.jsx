@@ -1,8 +1,8 @@
 import React from "react";
-import Login from '../Pages/Login';
-import PageNotFound from '../Pages/NotFound';
-import Home from "../Pages/Home";
-import Register from "../Pages/Register";
+import Login from '../Pages/Login/Login';
+import PageNotFound from '../Pages/NotFound/NotFound';
+import Home from "../Pages/Home/Home";
+import Register from "../Pages/Register/Register";
 
 
 const routes = [

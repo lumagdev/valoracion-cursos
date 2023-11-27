@@ -1,5 +1,5 @@
 import React, { useState, useLayoutEffect } from 'react';
-import { loginUser, useAuthState, useAuthDispatch } from '../Context';
+import { loginUser, useAuthState, useAuthDispatch } from '../../Context';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
