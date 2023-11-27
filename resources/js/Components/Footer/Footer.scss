@@ -10,7 +10,7 @@
 
     &__section-logo
     {
-        max-width: 210px;
+        
         width: 200px;
         height: 125px;
         overflow: hidden;
@@ -18,6 +18,12 @@
         border-radius: 30px;
         box-shadow: 1px 6px 5px rgba(0, 0, 0, 0.3);
         cursor: pointer;
+
+        @include mobile
+        {
+            width: 174px;
+            height: 106px;
+        }
 
         & > img
         {
@@ -34,10 +40,21 @@
         display: flex;
         flex-direction: column;
 
+        @include mobile
+        {
+            width: 80%;
+        }
+
         &__title
         {
             font-size: 25px;
-            text-align: center; 
+            font-family: $TEXT;
+            text-align: center;
+
+            @include mobile
+            {
+                font-size: 20px;
+            }
         }
         &__form
         {
@@ -47,12 +64,42 @@
             & > label
             {
                 font-size: 23px;
-                margin-bottom: 5px;
+                margin-bottom: 8px;
+                font-family: $TEXT;
+
+                @include mobile
+                {
+                    font-size: 18px;
+                }
             }
 
-            & >input
+            & > input
             {
+                outline: none;
                 margin-bottom: 18px;
+                font-size: 18px;
+                font-family: $PARAGRAPH;
+                background: none;
+                border: 0;
+                border-bottom: 3px solid $CANTALOUPE;
+
+                @include mobile
+                {
+                    font-size: 15px;
+                }
+            }
+            & > textarea
+            {
+                background-color: $CANTALOUPE;
+                font-size: 18px;
+                font-family: $PARAGRAPH;
+                padding: 10px;
+                border-radius: 5px;
+
+                @include mobile
+                {
+                    font-size: 15px;
+                }
             }
         }
     }
@@ -72,14 +119,25 @@
                 font-size: 34px;
                 color: $CANTALOUPE;
                 margin: 0 14px;
+
+                @include mobile
+                {
+                    font-size: 22px;
+                }
             }
         }
 
         &__text
         {
             font-size: 23px;
+            font-family: $TEXT;
             margin: 0 40px;
             text-align: center;
+
+            @include mobile
+            {
+                font-size: 15px;
+            }
 
             & > span
             {

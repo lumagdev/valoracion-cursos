@@ -22,8 +22,8 @@ const Footer = () =>
                 <textarea
                     name="message" 
                     id="message" 
-                    cols="30" 
-                    rows="10"
+                    cols="20" 
+                    rows="6"
                 ></textarea>
             </form>
         </section>
