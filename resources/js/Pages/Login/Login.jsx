@@ -39,10 +39,10 @@ const Login = () =>
 
     return (
         <section className='section-login'>
-            {errorMessage ? <p>{errorMessage}</p> : null}
             <div className='section-login__contenedor-login'>
                 <h2 className='section-login__contenedor-login__title'>Inicio de sesión</h2>
                 <p className='section-login__contenedor-login__parrafo-registrate'>¿Aún no tienes cuenta? <span><Link to={'/register'}>Regístrate</Link></span> </p>
+                {errorMessage ? <p className='section-login__contenedor-login__parrafo-error'>{errorMessage}</p> : null}
                 <form className='section-login__contenedor-login__form'>
                     <label htmlFor='email'>Email:</label>
                     <input 

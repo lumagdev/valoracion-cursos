@@ -57,6 +57,13 @@
                 }
             }
         }
+        &__parrafo-error
+        {
+            font-size: 22px;
+            font-weight: bold;
+            font-family: $TEXT;
+            margin: 0px 100px 15px;
+        }
         &__form
         {
             display: flex;

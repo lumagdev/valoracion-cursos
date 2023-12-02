@@ -41,7 +41,7 @@ export const AuthReducer = (initialState, action) => {
             return {
                 ...initialState,
                 loading: false,
-                errorMessage: 'Creedenciales incorrectas'
+                errorMessage: 'Usuario incorrecto o no existe'
             };
 
         default:

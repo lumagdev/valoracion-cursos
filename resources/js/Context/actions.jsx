@@ -1,13 +1,16 @@
 const ROOT_URL = 'http://127.0.0.1:8000/api';
- 
+const csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
+
 export async function loginUser(dispatch, loginPayload) 
 {
     const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken,
+        },
         body: JSON.stringify(loginPayload),
     };
-    
     try 
     {
         dispatch({ type: 'REQUEST_LOGIN' });
@@ -30,6 +33,7 @@ export async function loginUser(dispatch, loginPayload)
         dispatch({ type: 'LOGIN_ERROR', error: error });
         console.log('El usuario no existe');
     }
+    
 }
  
 export async function logout(dispatch) 
