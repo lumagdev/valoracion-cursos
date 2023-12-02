@@ -6,9 +6,9 @@ const Footer = () =>
 {
   return (
     <footer className='footer'>
-        <figure className='footer__section-logo'>
+        {/* <figure className='footer__section-logo'>
             <Logo/>
-        </figure>
+        </figure> */}
         <section className='footer__section-contactForm'>
             <h4 className='footer__section-contactForm__title'>Si tienes sugerencias y quieres contactarme ↴</h4>
             <form className='footer__section-contactForm__form'>
