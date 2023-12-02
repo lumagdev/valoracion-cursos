@@ -22,6 +22,7 @@
         {
             margin-bottom: 52px;
             font-size: 50px;
+            font-family: $TITLES;
             @include mobile
             {
                 font-size: 32px;
@@ -58,6 +59,7 @@
                     {
                         width: 80%;
                         font-size: 30px;
+                        font-family: $TITLES;
                         text-align: center;
                         margin: 40px 0 5px;
                         @include mobile
@@ -82,6 +84,7 @@
                         {
                             justify-self: flex-start;
                             font-size: 20px;
+                            font-family: $TEXT;
                             display: flex;
                             flex-flow: column nowrap;
                             
@@ -178,6 +181,7 @@
         {
             margin: 40px 0 52px;
             font-size: 50px;
+            font-family: $TITLES;
 
             @include mobile
             {
@@ -210,6 +214,7 @@
                 {
                     text-align: center;
                     font-size: 25px;
+                    font-family: $TEXT;
                     font-weight: bold;
 
                     @include mobile
@@ -232,6 +237,7 @@
         {
             margin: 40px 0 52px;
             font-size: 50px;
+            font-family: $TITLES;
 
             @include mobile
             {
@@ -271,6 +277,7 @@
                     {
                         width: 80%;
                         font-size: 30px;
+                        font-family: $TITLES;
                         text-align: center;
                         margin: 40px 0 40px;
 
@@ -315,7 +322,9 @@
                         {
                             width: 58%;
                             text-align: center;
+                            line-height: 1.3;
                             font-size: 19px;
+                            font-family: $PARAGRAPH;
 
                             @include mobile
                             {
