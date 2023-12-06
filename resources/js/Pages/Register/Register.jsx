@@ -2,14 +2,13 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../Components/Logo/Logo";
 import "./Register.scss";
-import { useRegister } from "../../Services/useRegister";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { postRegister } from "../../Services/postRegister";
 const RegisterForm = () => 
 {
-    const { postRegister, response, error: hookError } = useRegister();
     const navigate = useNavigate();
 
     const schema = yup.object({
@@ -22,16 +21,21 @@ const RegisterForm = () =>
         resolver: yupResolver(schema)
     });
 
-    useEffect(() => {
-        if (response) {
+    const {mutate, error} = useMutation({
+        mutationFn: postRegister,
+        onSuccess: (data) => {
+            console.log(data);
             navigate('/login');
+        },
+        onError: (e) => {
+            console.log(e);
         }
-    }, [response])
+    })
     
     
-    const onSubmit = async (dataForm) => 
+    const onSubmit = (dataForm) => 
     {
-        await postRegister({
+        mutate({
             name: dataForm.name,
             email: dataForm.email,
             password: dataForm.password
@@ -43,7 +47,6 @@ const RegisterForm = () =>
             <div className='section-register__contenedor-register'>
                 <h1 className='section-register__contenedor-register__title'>Register</h1>
                 <p className='section-register__contenedor-register__parrafo-inicia-sesion'>¿Ya tienes cuenta? <span><Link to={'/login'}>Inicia sesión</Link></span> </p>
-                {response && <p>Registro exitoso. Redirigiendo...</p> }
                 <form className='section-register__contenedor-register__form' onSubmit={handleSubmit(onSubmit)}>
                     <label htmlFor="name">Username</label>
                     <input
@@ -53,7 +56,7 @@ const RegisterForm = () =>
                         {...register('name')}
                     />
                     <span>{errors.name?.message}</span>
-                    {hookError && hookError.name && hookError.name[0] && <span> {hookError.name[0]} </span> }
+                    {error?.response.data.errors && error.response.data.errors.name && error.response.data.errors.name[0] && <span> {error.response.data.errors.name[0]} </span> }
                     <label htmlFor="email">Email</label>
                     <input
                         type="email"
@@ -62,7 +65,7 @@ const RegisterForm = () =>
                         {...register('email')}
                     />
                     <span>{errors.email?.message}</span>
-                    {hookError && hookError.email && hookError.email[0] && <span> {hookError.email[0]} </span> }
+                    {error?.response.data.errors && error.response.data.errors.email && error.response.data.errors.email[0] && <span> {error.response.data.errors.email[0]} </span> }
                     <label htmlFor="password">Password</label>
                     <input
                         id="password"
@@ -71,7 +74,7 @@ const RegisterForm = () =>
                         {...register('password')}
                     />
                     <span>{errors.password?.message}</span>
-                    {hookError && hookError.password && hookError.password[0] && <span> {hookError.password[0]} </span> }
+                    {error?.response.data.errors && error.response.data.errors.password && error.response.data.errors.password[0] && <span> {error.response.data.errors.password[0]} </span> }
                     <button type="submit">Register</button>
                 </form>
                 <figure className='section-register__contenedor-register__figure-logo'>

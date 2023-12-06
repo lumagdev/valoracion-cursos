@@ -26,7 +26,7 @@ class AuthController extends Controller
             if ($validator->fails())
             {
                 Log::error('Validation failed: ' . json_encode($validator->errors()));
-                return response()->json(['errors' => $validator->errors()], 400);
+                return response()->json(['errors' => $validator->errors()], 422);
             }
     
             $user = User::create([
@@ -71,7 +71,12 @@ class AuthController extends Controller
                 'message' => 'Welcome ' . $user->name,
                 'access_token' => $token,
                 'token_type' => 'Bearer',
-                'user' => $user
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->getRoleNames(),
+                ],
             ]); 
         } catch (\Exception $error) 
         {

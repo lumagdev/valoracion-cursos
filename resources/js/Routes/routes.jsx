@@ -3,7 +3,7 @@ import Login from '../Pages/Login/Login';
 import PageNotFound from '../Pages/NotFound/NotFound';
 import Home from "../Pages/Home/Home";
 import Register from "../Pages/Register/Register";
-
+import Unauthorized from "../Pages/Unauthorized/Unauthorized";
 
 const routes = [
     {
@@ -20,6 +20,11 @@ const routes = [
         path: "/register",
         element: <Register/>,
         isPrivate: false
+    },
+    {
+        path: "/unauthorized",
+        element: <Unauthorized/>,
+        isPrivate: true
     },
     {
         path: "*",
