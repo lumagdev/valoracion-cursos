@@ -14,63 +14,91 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(),
-        [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-        ]);
-
-        if ($validator->fails())
+        try 
         {
-            Log::error('Validation failed: ' . json_encode($validator->errors()));
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
-
-        $user = User::create(
-        [
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password)
-        ]);
-
-        $user->assignRole('common');
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json(
+            $validator = Validator::make($request->all(),
             [
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|min:8',
+            ]);
+    
+            if ($validator->fails())
+            {
+                Log::error('Validation failed: ' . json_encode($validator->errors()));
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+    
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
+    
+            $user->assignRole('common');
+    
+            $token = $user->createToken('auth_token')->plainTextToken;
+    
+            return response()->json([
                 'data' => $user,
                 'access_token' => $token,
                 'token_type' => 'Bearer',
                 'success' => true
             ], 201);
+
+        } catch (\Exception $error) 
+        {
+            Log::error('Error during registration: ' . $error->getMessage());
+            return response()->json(['message' => 'Internal Server Error'], 500);
+        }
+
     }
 
     public function login(Request $request)
     {
-        if (!Auth::attempt($request->only('email', 'password')))
+        try 
         {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            if (!Auth::attempt($request->only('email', 'password')))
+            {
+                return response()->json(['message' => 'Unauthorized'], 401);
+            }
+    
+            $user = User::where('email', $request['email'])->firstOrFail();
+        
+            $token = $user->createToken('auth_token')->plainTextToken;
+    
+            return response()->json([
+                'message' => 'Welcome ' . $user->name,
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->getRoleNames(),
+                ],
+            ]); 
+        } catch (\Exception $error) 
+        {
+            Log::error('Error during login: ' . $error->getMessage());
+            return response()->json(['message' => 'Internal Server Error'], 500);  
         }
 
-        $user = User::where('email', $request['email'])->firstOrFail();
-    
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'message' => 'Welcome ' . $user->name,
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'user' => $user
-        ]);
 
     }
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        try 
+        {
+            $request->user()->currentAccessToken()->delete();
 
-        return ['message' => 'You have successfully logged out.'];
+            return ['message' => 'You have successfully logged out.'];
+            
+        } catch (\Exception $error) {
+            Log::error('Error during logout: ' . $error->getMessage());
+            return response()->json(['message' => 'Internal Server Error'], 500);
+        }
+
     }
 }

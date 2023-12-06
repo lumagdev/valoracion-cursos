@@ -1,116 +1,80 @@
 import React from "react";
-import { useFormik } from "formik";
 import { Link, useNavigate } from "react-router-dom";
-import { register } from "../../Services/register";
 import Logo from "../../Components/Logo/Logo";
 import "./Register.scss";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import { postRegister } from "../../Services/postRegister";
 const RegisterForm = () => 
 {
     const navigate = useNavigate();
-    const validateForm = (values) => 
-    {
-        const errors = {};
-        if (!values.name) 
-        {
-            errors.name = "Requerido";
-        } else if (values.name.length < 3) 
-        {
-            errors.name = "Debe tener 3 carácteres o mas";
-        }
-        if (!values.email) 
-        {
-          errors.email = "Requerido";
-        } else if (values.email.length < 4) 
-        {
-          errors.email = "Debe tener 5 carácteres o mas";
-        }
-    
-        if (!values.password) 
-        {
-          errors.password = "Requerido";
-        } else if (values.password.length < 8) 
-        {
-          errors.password = "Debe tener 8 carácteres o mas";
-        }
-    
-        return errors;
-    };
 
-    const registerFormik = useFormik({
-        initialValues: 
-        {
-            name: "",
-            email: "",
-            password: "",
-        },
-        validateForm,
-        onSubmit: (values) => {
-            //alert(JSON.stringify(values, null, 2));
-            console.log('values', values);
-            handleSubmit(values);
-        },
+    const schema = yup.object({
+        name: yup.string().required('El nombre es obligatorio.').min(4, 'Debe ser un nombre con un mínimo de 4 caracteres'),
+        email: yup.string().required('El email es obligatorio.').email('Formato email inválido.'),
+        password: yup.string().required('Introduce la contraseña.').min(8, 'Debe ser un nombre con un mínimo de 8 caracteres')    
+    })
+
+    const {register, handleSubmit, formState: { errors }} = useForm({
+        resolver: yupResolver(schema)
     });
 
-    const handleSubmit = (data) => {
-        if (register(data)) {
+    const {mutate, error} = useMutation({
+        mutationFn: postRegister,
+        onSuccess: (data) => {
+            console.log(data);
             navigate('/login');
-        }else 
-        {
-            console.log('Error');
+        },
+        onError: (e) => {
+            console.log(e);
         }
-    }
+    })
+    
+    
+    const onSubmit = (dataForm) => 
+    {
+        mutate({
+            name: dataForm.name,
+            email: dataForm.email,
+            password: dataForm.password
+        })
+    };
+
     return (
         <section className="section-register">
             <div className='section-register__contenedor-register'>
                 <h1 className='section-register__contenedor-register__title'>Register</h1>
                 <p className='section-register__contenedor-register__parrafo-inicia-sesion'>¿Ya tienes cuenta? <span><Link to={'/login'}>Inicia sesión</Link></span> </p>
-                <form className='section-register__contenedor-register__form' onSubmit={registerFormik.handleSubmit}>
+                <form className='section-register__contenedor-register__form' onSubmit={handleSubmit(onSubmit)}>
                     <label htmlFor="name">Username</label>
                     <input
-                        onChange={registerFormik.handleChange}
-                        onBlur={registerFormik.handleBlur}
-                        value={registerFormik.values.name}
+                        type="text"
                         id="name"
                         name="name"
+                        {...register('name')}
                     />
-                    {
-                        registerFormik.touched.name && registerFormik.errors.name ?
-                            <div>
-                                {registerFormik.errors.name}
-                            </div>
-                        : null
-                    }
+                    <span>{errors.name?.message}</span>
+                    {error?.response.data.errors && error.response.data.errors.name && error.response.data.errors.name[0] && <span> {error.response.data.errors.name[0]} </span> }
                     <label htmlFor="email">Email</label>
                     <input
-                        onChange={registerFormik.handleChange}
-                        onBlur={registerFormik.handleBlur}
-                        value={registerFormik.values.email}
+                        type="email"
                         id="email"
                         name="email"
+                        {...register('email')}
                     />
-                    {
-                        registerFormik.touched.email && registerFormik.errors.email ?
-                            <div>
-                                {registerFormik.errors.email}
-                            </div>
-                        : null
-                    }
+                    <span>{errors.email?.message}</span>
+                    {error?.response.data.errors && error.response.data.errors.email && error.response.data.errors.email[0] && <span> {error.response.data.errors.email[0]} </span> }
                     <label htmlFor="password">Password</label>
                     <input
-                        onChange={registerFormik.handleChange}
-                        onBlur={registerFormik.handleBlur}
-                        value={registerFormik.values.password}
                         id="password"
                         name="password"
                         type="password"
+                        {...register('password')}
                     />
-                    {
-                        registerFormik.touched.password && registerFormik.errors.password ?
-                            <div>
-                                {registerFormik.errors.password}
-                            </div>
-                        : null
-                    }
+                    <span>{errors.password?.message}</span>
+                    {error?.response.data.errors && error.response.data.errors.password && error.response.data.errors.password[0] && <span> {error.response.data.errors.password[0]} </span> }
                     <button type="submit">Register</button>
                 </form>
                 <figure className='section-register__contenedor-register__figure-logo'>

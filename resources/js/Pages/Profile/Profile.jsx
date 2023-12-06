@@ -1,33 +1,29 @@
 import React from 'react'
-import { useAuthDispatch, logout, useAuthState } from '../../Context';
 import { useNavigate } from "react-router-dom";
+import useUserStore from '../../Store/useUserStore';
 
 const Profile = () => 
 {
     let navigate = useNavigate();
-    const dispatch = useAuthDispatch(); // lee el método dispatch del contexto
-    //const user = useAuthState(); //lee los detalles del usuario del contexto
-    const user = JSON.parse(localStorage.getItem("currentUser"));
-  
+    const logout = useUserStore((state) => state.logout);
+    const user = useUserStore((state) => state.user);
 
-    console.log('useprofile', user );
-
-    
     const handleLogout = () => 
     {
-        logout(dispatch); //llama a la acción logout
-        navigate("/login"); //navega de nuevo al login sin usuario
+        logout();
+        navigate("/login");
     };
 
     return (
         <div>
             <h1>Perfil de usuario</h1>
-                
+            
+            <p>Bienvenid@ {user?.name}</p>
+            <p>Con el rol {user?.role[0]} </p>
+
             <button onClick={handleLogout}>
                 Logout
             </button>
-            
-            <p>Bienvenid@ {user.user?.name}</p>
         </div>
         
     );
