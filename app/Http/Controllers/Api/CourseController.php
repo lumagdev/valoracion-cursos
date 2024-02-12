@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Course;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Storage;
 class CourseController extends Controller
@@ -13,13 +14,21 @@ class CourseController extends Controller
     {
         try 
         {
-            $allCourses = Course::all();
+            // if (Auth::user()->hasAnyRole(['admin', 'common']) )
+            // {
+            $allCourses = Course::with('authors')->get();
             return response()->json([
                 'success' => true,
                 'data' => $allCourses,
                 'message' => 'Request OK'
             ], 200);
-
+            // }
+            // else
+            // {
+            //     return response()->json([
+            //         'message' => 'Unauthorized',
+            //     ], 403);
+            // }
         } catch (\Exception $error) 
         {
             return response()->json([
@@ -33,7 +42,7 @@ class CourseController extends Controller
     {
         try
         {
-            $courseById = Course::find($id);
+            $courseById = Course::with('authors')->find($id);
 
             if (!isset($courseById)) 
             {
@@ -66,7 +75,7 @@ class CourseController extends Controller
                 'category' => 'required',
                 'location' => 'required',
                 'website' => 'required',
-                'rating' => 'required|numeric',
+                'rating' => 'numeric',
                 'cover_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'questions' => 'required|array',
                 'author_id' => 'required',
@@ -94,7 +103,13 @@ class CourseController extends Controller
 
             if ($request->hasFile('cover_image')) 
             {
-                $imagePath = $request->file('cover_image')->store('/courses', 'images'); 
+                //$imagePath = $request->file('cover_image')->store('/courses', 'images');
+                $image = $request->file('cover_image');
+                // Generar un nombre único para la imagen
+                $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+                // Almacenar la imagen en la ruta deseada dentro del disco 'public'
+                $imagePath = "images/courses/{$imageName}";
+                Storage::disk('public')->put($imagePath, file_get_contents($image));  
             }
 
             $createdCourse = new Course;
@@ -127,7 +142,7 @@ class CourseController extends Controller
     }
 
     public function updateCourse(Request $request, $id)
-    {
+    {   
         try 
         {
             $updatedCourse = Course::find($id);
@@ -140,19 +155,19 @@ class CourseController extends Controller
             }
             
             $validations = [
-                'name' => 'required',
-                'description' => 'required',
-                'category' => 'required',
-                'location' => 'required',
-                'website' => 'required',
-                'rating' => 'required|numeric',
-                'cover_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-                'questions' => 'required|array',
-                'author_id' => 'required',
+                'name' => 'string',
+                'description' => 'string',
+                'category' => 'string',
+                'location' => 'string',
+                'website' => 'string',
+                'rating' => 'numeric',
+                'cover_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+                'questions' => 'string|array',
+                'author_id' => 'numeric',
             ];
     
             $validations_messages = [
-                'required' => 'El campo :attribute es obligatorio.',
+                'string' => 'El campo :attribute debe ser una cadena de texto.',
                 'numeric' => 'El campo :attribute debe ser numerico',
                 'image' => 'El campo :attribute debe ser una imagen válida.',
                 'mimes' => 'El campo :attribute debe ser una imagen en formato JPEG, PNG, JPG o GIF.',
@@ -173,21 +188,25 @@ class CourseController extends Controller
         
             if ($request->hasFile('cover_image')) 
             {
-                Storage::disk('images')->delete($updatedCourse->cover_image);
+                Storage::disk('public')->delete($updatedCourse->cover_image);
+
+                $image = $request->file('cover_image');
+                $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+                $imagePath = "images/courses/{$imageName}";
+                Storage::disk('public')->put($imagePath, file_get_contents($image));  
     
-                $imagePath = $request->file('image')->store('/courses', 'images');
                 $updatedCourse->cover_image = $imagePath;
             }
     
-            $updatedCourse->name = $request->input('name');
-            $updatedCourse->description = $request->input('description');
-            $updatedCourse->category = $request->input('category');
-            $updatedCourse->location = $request->input('location');
-            $updatedCourse->website = $request->input('website');
-            $updatedCourse->rating = $request->input('rating');
-            $updatedCourse->price = $request->input('price');
-            $updatedCourse->questions = $request->input('questions');
-            $updatedCourse->author_id = $request->input('author_id');
+            $fieldsToUpdate = ['name', 'description', 'category', 'location', 'website', 'rating', 'price', 'questions', 'author_id'];
+
+            foreach ($fieldsToUpdate as $field)
+            {
+                if ($request->has($field))
+                {
+                    $updatedCourse->{$field} = $request->input($field);
+                }
+            }
     
             $updatedCourse->save();
     
@@ -210,6 +229,11 @@ class CourseController extends Controller
         try 
         {
             $deletedCourse = Course::find($id);
+
+            if (isset($deletedCourse->cover_image)) 
+            {
+                Storage::disk('public')->delete($deletedCourse->cover_image);
+            }
 
             if (!isset($deletedCourse)) 
             {

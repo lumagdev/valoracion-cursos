@@ -18,13 +18,13 @@ class RoleAndPermissionSeeder extends Seeder
         $adminRole = Role::create(['name' => 'admin']);
         $commonRole = Role::create(['name' => 'common']);
 
-        // Crear permisos
-        $reviewCrudPermission = Permission::create(['name' => 'review-crud']);
-        $editOwnUserPermission = Permission::create(['name' => 'edit-own-user']);
+        // // Crear permisos
+        // $reviewCrudPermission = Permission::create(['name' => 'review-crud']);
+        // $editOwnUserPermission = Permission::create(['name' => 'edit-own-user']);
 
-        // Asignar permisos a roles
-        $commonRole->givePermissionTo('review-crud');
-        $commonRole->givePermissionTo('edit-own-user');
-        $adminRole->givePermissionTo(['review-crud', 'edit-own-user']);
+        // // Asignar permisos a roles
+        // $commonRole->givePermissionTo('review-crud');
+        // $commonRole->givePermissionTo('edit-own-user');
+        // $adminRole->givePermissionTo(['review-crud', 'edit-own-user']);
     }
 }

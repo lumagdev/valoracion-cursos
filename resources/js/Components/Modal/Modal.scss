@@ -1,0 +1,60 @@
+@use "../../Styles/" as *;
+
+.section-modal
+{
+    background-color: rgba(0, 0, 0, 0.9);
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    position: fixed;
+    overflow: auto;
+    
+    &__container-modal
+    {
+        background-color: aliceblue;
+        width: 80%;
+        height: inherit;
+        overflow-y: auto;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 5px;
+        
+        &__header
+        {
+            padding: 30px 40px;
+            &__title
+            {
+                margin: 0;
+                font-size: 30px;
+            }
+        }
+        &__body
+        {
+            padding: 0px 40px;
+        }
+        &__footer
+        {
+            padding: 30px 40px;
+            display: flex;
+            justify-content: flex-end;
+            & > button
+            {
+                background-color: $TURQUOISE;
+                border: 0;
+                padding: 14px 52px;
+                font-size: 24px;
+                cursor: pointer;
+            }
+            & > button:nth-child(1)
+            {
+                color: red;
+                margin-right: 3em;
+            }
+        }
+    }
+
+}

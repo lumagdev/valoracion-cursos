@@ -5,7 +5,7 @@ import Logo from '../../Components/Logo/Logo';
 import "./Login.scss";
 import useUserStore from '../../Store/useUserStore';
 import { useMutation } from '@tanstack/react-query';
-import { postLogin } from '../../Services/postLogin';
+import { postLogin } from '../../Services/Auth/postLogin';
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from 'react-hook-form';
