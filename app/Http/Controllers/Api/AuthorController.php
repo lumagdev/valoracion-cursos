@@ -90,19 +90,21 @@ class AuthorController extends Controller
 
             if ($request->hasFile('photo')) 
             {
-                $photoPath = $request->file('photo')->store('/authors', 'images');
-                // $fileNameWithExtension = $request->file('photo')->getClientOriginalName();
-                // $fileName = pathinfo($fileNameWithExtension, PATHINFO_FILENAME);
-                // $FileExtension = $request->file('photo')->getClientOriginalExtension();
-                // $fileNameToStore = $fileName.'_'.time().'.'.$FileExtension;
-                // Storage::disk('images')->put('/authors/'.$fileNameToStore, File::get($request->file('photo')) );  
+                //$photoPath = $request->file('photo')->store('/authors', 'images');
+
+                $image = $request->file('photo');
+                // Generar un nombre único para la imagen
+                $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+                // Almacenar la imagen en la ruta deseada dentro del disco 'public'
+                $imagePath = "images/authors/{$imageName}";
+                Storage::disk('public')->put($imagePath, file_get_contents($image));  
             }
 
             $createdAuthor = new Author;
             $createdAuthor->name = $request->input('name');
             $createdAuthor->website = $request->input('website');
             $createdAuthor->author_rating = $request->input('author_rating');
-            $createdAuthor->photo = $photoPath;
+            $createdAuthor->photo = $imagePath;
 
             $createdAuthor->save();
 
@@ -164,17 +166,15 @@ class AuthorController extends Controller
             if ($request->hasFile('photo')) 
             {
                 // Si hay foto nueva debemos recuperar la vieja y eliminarla
-                Storage::disk('images')->delete($updatedAuthor->photo);
+                Storage::disk('public')->delete($updatedAuthor->photo);
                 // Actualizamos la nueva imagen
-                $photoPath = $request->file('photo')->store('/authors', 'images');
-                $updatedAuthor->photo = $photoPath;
+                $image = $request->file('photo');
+                $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+                $imagePath = "images/authors/{$imageName}";
+                Storage::disk('public')->put($imagePath, file_get_contents($image));  
+    
+                $updatedAuthor->photo = $imagePath;
                 
-                // $fileNameWithExtension = $request->file('photo')->getClientOriginalName();
-                // $fileName = pathinfo($fileNameWithExtension, PATHINFO_FILENAME);
-                // $FileExtension = $request->file('photo')->getClientOriginalExtension();
-                // $fileNameToStore = $fileName.'_'.time().'.'.$FileExtension;
-                // Storage::disk('images')->put('/authors/'.$fileNameToStore, File::get($request->file('photo')) );
-                // $updatedAuthor->photo = $fileNameToStore;
             }
             //Actualizamos el autor
             $updatedAuthor->name = $request->input('name');
@@ -203,6 +203,11 @@ class AuthorController extends Controller
         try
         {
             $deletedAuthor = Author::find($id);
+
+            if (isset($deletedAuthor->photo)) 
+            {
+                Storage::disk('public')->delete($deletedAuthor->photo);
+            }
 
             if (!isset($deletedAuthor)) 
             {
