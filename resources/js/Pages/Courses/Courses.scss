@@ -1,0 +1,130 @@
+@use "../../Styles/" as *;
+
+.section-courses
+{
+    padding: 175px 0px 50px 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4em;
+
+    @include mobile
+    {
+        padding: 115px 0px 45px 0px;
+        gap: 2em;
+    }
+
+    &__filters-buttons
+    {
+        width: 68%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        @include mobile
+        {
+            width: 86%;
+        }
+        &__seeker-container
+        {
+            & > input
+            {
+                background-color: $TURQUOISE;
+                font-family: $TEXT;
+                font-size: 20px;
+
+                @include mobile
+                {
+                    font-size: 16px;
+                }
+            }
+        }
+        & > div
+        {
+            background-color: $TURQUOISE;
+            display: flex;
+            align-items: center;
+            padding: 0.7em 2em;
+            border-radius: 5px;
+            @include mobile
+            {
+                padding: 0.5em 0.5em;
+            }
+            & > svg
+            {
+                font-size: 20px;
+                font-weight: bold;
+                @include mobile
+                {
+                    font-size: 18px;
+                }
+            }
+        }
+        & > div:nth-child(2), & > div:nth-child(3)
+        {
+            gap: 0.6em;
+            cursor: pointer;
+
+            & > p
+            {
+                font-family: $TEXT;
+                font-size: 20px;
+                font-weight: bold;
+                @include mobile
+                {
+                    display: none;
+                }
+            }
+        }
+    }
+    &__courses-cards
+    {
+        width: 52%;
+        display: flex;
+        flex-direction: column;
+        gap: 5em;
+        @include mobile
+        {
+            width: 86%;
+        }
+    }
+    &__pagination
+    {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 68%;
+        @include mobile
+        {
+            width: 86%;
+        }
+        & > div
+        {
+            background-color: $TURQUOISE;
+            font-size: 26px;
+            font-family: $TEXT;
+            border-radius: 8px;
+            @include mobile
+            {
+                font-size: 20px;
+            }
+        }
+        & > div:nth-child(1)
+        {
+            text-align: start;
+            padding: 0.5em 2em 0.5em 0.3em;
+            @include mobile
+            {
+                padding: 0.3em 1em 0.3em 0.3em;
+            }
+        }
+        & > div:nth-child(2)
+        {
+            text-align: end;
+            padding: 0.5em 0.3em 0.5em 2em;
+            @include mobile
+            {
+                padding: 0.3em 0.3em 0.3em 1em;
+            }
+        }
+    }
+}

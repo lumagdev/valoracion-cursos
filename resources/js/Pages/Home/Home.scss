@@ -205,6 +205,8 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                padding: 1.2em 0.5em;
+                border-radius: 7px;
 
                 @include mobile
                 {

@@ -85,7 +85,10 @@ class TechnologyController extends Controller
 
             if ($request->hasFile('image')) 
             {
-                $imagePath = $request->file('image')->store('/technologies', 'images'); 
+                $image = $request->file('image');
+                $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+                $imagePath = "images/technologies/{$imageName}";
+                Storage::disk('public')->put($imagePath, file_get_contents($image));
             }
 
             $createdTechnology = new Technology;
@@ -123,12 +126,11 @@ class TechnologyController extends Controller
             }
             
             $validations = [
-                'name' => 'required',
-                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+                'name' => 'string',
+                'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
             ];
 
             $validations_messages = [
-                'required' => 'El campo :attribute es obligatorio.',
                 'image' => 'El campo :attribute debe ser una imagen válida.',
                 'mimes' => 'El campo :attribute debe ser una imagen en formato JPEG, PNG, JPG o GIF.',
                 'max' => 'El campo :attribute no debe ser mayor de 2 MB.'
@@ -147,13 +149,23 @@ class TechnologyController extends Controller
         
             if ($request->hasFile('image')) 
             {
-                Storage::disk('images')->delete($updatedTechnology->image);
+                Storage::disk('public')->delete($updatedTechnology->image);
 
-                $imagePath = $request->file('image')->store('/technologies', 'images');
+                $image = $request->file('image');
+                $imageName = uniqid() . '.' . $image->getClientOriginalExtension();
+                $imagePath = "images/technologies/{$imageName}";
+                Storage::disk('public')->put($imagePath, file_get_contents($image));
+
                 $updatedTechnology->image = $imagePath;
             }
 
-            $updatedTechnology->name = $request->input('name');
+            $fieldsToUpdate = ['name'];
+            foreach ($fieldsToUpdate as $field) {
+                if ($request->has($field)) 
+                {
+                    $updatedTechnology->{$field} = $request->input($field);
+                }
+            }
 
             $updatedTechnology->save();
 
@@ -177,6 +189,11 @@ class TechnologyController extends Controller
         try
         {
             $deletedTechnology = Technology::find($id);
+
+            if (isset($deletedTechnology->image)) 
+            {
+                Storage::disk('public')->delete($deletedTechnology->image);
+            }
 
             if (!isset($deletedTechnology)) 
             {
