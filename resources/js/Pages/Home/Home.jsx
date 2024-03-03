@@ -6,7 +6,6 @@ import devUno from "../../Assets/midudev-photo.jpg";
 import devDos from "../../Assets/fernandoHerrera.jpg";
 import devTres from "../../Assets/brais-moure.jpg";
 import "./Home.scss";
-import { useEffect } from "react";
 //import { NavLink } from "react-router-dom";
 import { FaRegStar, FaReact } from "react-icons/fa";
 

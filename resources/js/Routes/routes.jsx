@@ -4,6 +4,7 @@ import PageNotFound from '../Pages/NotFound/NotFound';
 import Home from "../Pages/Home/Home";
 import Register from "../Pages/Register/Register";
 import Unauthorized from "../Pages/Unauthorized/Unauthorized";
+import Courses from "../Pages/Courses/Courses";
 
 const routes = [
     {
@@ -25,6 +26,16 @@ const routes = [
         path: "/unauthorized",
         element: <Unauthorized/>,
         isPrivate: true
+    },
+    {
+        path: "/courses-list",
+        element: <Courses/>,
+        isPrivate: false
+    },
+    {
+        path: "/course-detail/:id",
+        element: <Courses/>,
+        isPrivate: false
     },
     {
         path: "*",

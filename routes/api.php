@@ -24,6 +24,13 @@ use App\Http\Controllers\Api\CourseController;
 Route::post('register', [AuthController::class, 'register'])->withoutMiddleware(['auth:sanctum']);
 Route::post('login', [AuthController::class, 'login'])->withoutMiddleware(['auth:sanctum']);
 
+// Course
+Route::get('/courses', [CourseController::class, 'getAllCourses'])->name('courses.allCourses');
+Route::get('/courses/{id}', [CourseController::class, 'getCourseById'])->name('courses.courseById');
+// Technology
+Route::get('/technologies', [TechnologyController::class, 'getAllTechnologies'])->name('technologies.allTechnologies');
+Route::get('/technologies/{id}', [TechnologyController::class, 'getTechnologyById'])->name('technologies.technologyById');
+
 // Rutas que requieren autenticacion.
 Route::middleware(['auth:sanctum'])->group(function ()
 {
@@ -48,9 +55,8 @@ Route::middleware(['auth:sanctum'])->group(function ()
         Route::delete('/authors/delete/{id}', [AuthorController::class, 'deleteAuthor'])->name('authors.deleteAuthor');
         
         // Technology
-        Route::get('/technologies/{id}', [TechnologyController::class, 'getTechnologyById'])->name('technologies.technologyById');
         Route::post('/technologies/create', [TechnologyController::class, 'createTechnology'])->name('technologies.createTechnology');
-        Route::put('/technologies/update/{id}', [TechnologyController::class, 'updateTechnology'])->name('technologies.updateTechnology');
+        Route::match(['post','put'],'/technologies/update/{id}', [TechnologyController::class, 'updateTechnology'])->name('technologies.updateTechnology');
         Route::delete('/technologies/delete/{id}', [TechnologyController::class, 'deleteTechnology'])->name('technologies.deleteTechnology');
     
         // Review
@@ -58,7 +64,6 @@ Route::middleware(['auth:sanctum'])->group(function ()
         Route::get('/reviews/{id}', [ReviewController::class, 'getReviewById'])->name('reviews.reviewById');
 
         // Course
-        Route::get('/courses/{id}', [CourseController::class, 'getCourseById'])->name('courses.courseById');
         Route::post('/courses/create', [CourseController::class, 'createCourse'])->name('courses.createCourse');
         Route::match(['post','put'],'/courses/update/{id}', [CourseController::class, 'updateCourse'])->name('courses.updateCourse');
         Route::delete('/courses/delete/{id}', [CourseController::class, 'deleteCourse'])->name('courses.deleteCourse');
@@ -75,14 +80,8 @@ Route::middleware(['auth:sanctum'])->group(function ()
     // Author
     Route::get('/authors', [AuthorController::class, 'getAllAuthors'])->name('authors.allAuthors');
 
-    // Technology
-    Route::get('/technologies', [TechnologyController::class, 'getAllTechnologies'])->name('technologies.allTechnologies');
-
     // Review N:M Course-User
     Route::post('/reviews/create', [ReviewController::class, 'createReview'])->name('reviews.createReview');
     Route::put('/reviews/update/{id}', [ReviewController::class, 'updateReview'])->name('reviews.updateReview');
     Route::delete('/reviews/delete/{id}', [ReviewController::class, 'deleteReview'])->name('reviews.deleteReview');
-
-    // Course
-    Route::get('/courses', [CourseController::class, 'getAllCourses'])->name('courses.allCourses');
 });

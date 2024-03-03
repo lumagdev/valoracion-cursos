@@ -12,7 +12,14 @@ import Modal from '../../Components/Modal/Modal';
 import { postCourse } from '../../Services/Course/postCourse';
 import { getAuthors } from '../../Services/Author/getAuthor';
 import { putCourse } from '../../Services/Course/putCourse';
+import { deleteCourse } from '../../Services/Course/deleteCourse';
+import { getTechnologies } from '../../Services/Technology/getTechnologies';
+import { postTechnology } from '../../Services/Technology/postTechnology';
+import { putTechnology } from '../../Services/Technology/putTechnology';
+import { deleteTechnology } from '../../Services/Technology/deleteTechnology';
 import { useAlertMessage } from '../../Hooks/alertMessage';
+import { Popconfirm } from 'antd';
+//import PopConfirm from '../../Components/PopConfirm/PopConfirm';
 
 
 const Admin = () => 
@@ -20,19 +27,32 @@ const Admin = () =>
     const { isAuth } = useUserStore();
     const queryClient = useQueryClient();
     const [isOpenModalNewCourse, setIsOpenModalNewCourse] = useState(false);
+    const [isOpenModalNewTechnology, setIsOpenModalNewTechnology] = useState(false);
     const [isOpenModalUpdateCourse, setIsOpenModalUpdateCourse] = useState(false);
+    const [isOpenModalUpdateTechnology, setIsOpenModalUpdateTechnology] = useState(false);
     const [fileQuestionsContent, setFileQuestionsContent] = useState([]);
     const [fileCoverImage, setFileCoverImage] = useState(null);
+    const [technologyImage, setTechnologyImage] = useState(null);
     const {handleAlertMessage: successPostCourse, contextHolder: contextHolderPostCourseSuccess} = useAlertMessage('success','El curso ha sido creado con exito');
     const {handleAlertMessage: successUpdateCourse , contextHolder: contextHolderUpdateCourseSuccess} = useAlertMessage('success','El curso ha sido editado con exito');
     const {handleAlertMessage: errorPostCourse, contextHolder: contextHolderPostCourseError} = useAlertMessage('error','No se ha podido crear el curso');
     const {handleAlertMessage: errorUpdateCourse , contextHolder: contextHolderUpdateCourseError} = useAlertMessage('error','No se ha podido actualizar el curso');
+    const {handleAlertMessage: successDeleteCourseMessage, contextHolder: contextHolderDeleteCourseSuccess} = useAlertMessage('success','El curso ha sido borrado con exito');
+    const {handleAlertMessage: errorDeleteCourseMessage, contextHolder: contextHolderDeleteCourseError} = useAlertMessage('error','No se ha podido borrar el curso');
+    const {handleAlertMessage: errorPostTechnologyMessage, contextHolder: contextHolderPostTechnologyError} = useAlertMessage('error','No se ha podido crear la tecnología');
+    const {handleAlertMessage: errorUpdateTechnology , contextHolder: contextHolderUpdateTechnologyError} = useAlertMessage('error','No se ha podido actualizar la tecnología');
+    const {handleAlertMessage: successPostTechnology, contextHolder: contextHolderPostTechnologySuccess} = useAlertMessage('success','La tecnología ha sido creada con exito');
+    const {handleAlertMessage: successUpdateTechnology, contextHolder: contextHolderUpdateTechnologySuccess} = useAlertMessage('success','La tecnología ha sido actualizada con exito');
+    const {handleAlertMessage: successDeleteTechnologyMessage, contextHolder: contextHolderDeleteTechnologySuccess} = useAlertMessage('success','La tecnología ha sido borrada con exito');
+    const {handleAlertMessage: errorDeleteTechnologyMessage, contextHolder: contextHolderDeleteTechnologyError} = useAlertMessage('error','No se ha podido borrar la tecnología');
     const [dataCourseToChange, setDataCourseToChange] = useState({});
+    const [dataTechnologyToChange, setDataTechnologyToChange] = useState({});
+
     // TantstanckQuery para getcourses
     const {isError: isErrorCourses, data: dataCourses, error:errorCourses} = useQuery({
         queryKey: ['courses'],
         queryFn: getCourses,
-        enabled: isAuth
+        //enabled: isAuth
     });
     //console.log(data);
     if (isErrorCourses) {
@@ -67,6 +87,7 @@ const Admin = () =>
     {
         const file = event.target.files[0];
         setFileCoverImage(file);
+        console.log(file);
     } 
 
     const handleQuestionFile = async (event) =>
@@ -94,9 +115,6 @@ const Admin = () =>
         location: yup.string().required('El campo plataforma es obligatorio.'),
         website: yup.string().required('El campo sitio web es obligatorio.'),
         price: yup.string().required('El campo precio es obligatorio.'),
-        cover_image: yup.mixed().required('El campo imagen portada es obligatorio.'),
-        author: yup.number().required('El campo autor es obligatorio.'),
-        questions: yup.mixed().required('El campo preguntas es obligatorio.')
     });
 
     const {register: registerPostCourse, handleSubmit: handleSubmitPostCourse, formState: { errors: errorsPostCourse }, setValue: setValuePostCourse, getValues: getValuesPostCourse} = useForm({
@@ -111,7 +129,7 @@ const Admin = () =>
             setIsOpenModalNewCourse(false);
             successPostCourse();
             // Limpiando los setters
-            setFileCoverImage(null);
+            setTechnologyImage(null);
             setFileQuestionsContent(null);
         },
         onError: (e) => {
@@ -163,7 +181,7 @@ const Admin = () =>
             setIsOpenModalUpdateCourse(false);
             successUpdateCourse();
             // Limpiando los setters
-            setFileCoverImage(null);
+            setTechnologyImage(null);
             setFileQuestionsContent(null);
         },
         onError: (e) => {
@@ -190,25 +208,162 @@ const Admin = () =>
             }
         })
     };
+
+    //-----------------------------Delete courses--------------------------------------------
+    const {mutate: mutateDeleteCourse, error: errorDeleteCourse} = useMutation({
+        mutationFn: deleteCourse,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['courses']});
+            successDeleteCourseMessage();
+        },
+        onError: (e) => {
+            console.log(e);
+            //Mensaje alert
+            errorDeleteCourseMessage();
+        }
+    });
+
+    const onSubmitDeleteCourse = (id) => 
+    {
+        mutateDeleteCourse({
+            id: id,
+        })
+    };
+
+    // --------------------------------------Get technologies---------------------------------------------------
+    // TantstanckQuery para gettechnologies
+    const {isError: isErrorTechnologies, data: dataTechnologies, error:errorTechnologies} = useQuery({
+        queryKey: ['technologies'],
+        queryFn: getTechnologies,
+    });
+    if (isErrorTechnologies) {
+        console.error(errorTechnologies.message);
+    }
+
+    const handleTechnologyImage = (event) =>
+    {
+        const file = event.target.files[0];
+        setTechnologyImage(file);
+        console.log(file);
+    }
+    // -------------------------------Query para post technologies-------------------------------------------
+    const schemaTechnology = yup.object({
+        name: yup.string().required('El nombre es obligatorio.'),
+    });
+
+    const {register: registerPostTechnology, handleSubmit: handleSubmitPostTechnology, formState: { errors: errorsPostTechnology }, setValue: setValuePostTechnology, getValues: getValuesPostTechnology} = useForm({
+        resolver: yupResolver(schemaTechnology)
+    });
+
+    const {mutate: mutatePostTechnology, error: errorPostTechnology} = useMutation({
+        mutationFn: postTechnology,
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['technologies']});
+            setIsOpenModalNewTechnology(false);
+            successPostTechnology();
+            // Limpiando los setters
+            setTechnologyImage(null);
+        },
+        onError: (e) => {
+            console.log(e);
+            //Mensaje alert
+            errorPostTechnologyMessage();
+        }
+    });
+
+    const onSubmitPostTechnology = (dataForm) => 
+    {
+        mutatePostTechnology({
+            name: dataForm.name,
+            image: technologyImage,
+        })
+    };
+
+    // -------------------------------------------Update technologies---------------------------------------------------------
+    const saveDataTechnologyToChange = (data) =>
+    {
+        setDataTechnologyToChange(data);
+        setIsOpenModalUpdateTechnology(true);
+    }
     
+    const {register: registerUpdateTechnology, handleSubmit: handleSubmitUpdateTechnology, formState: { errors: errorsUpdateTechnology }, setValue: setValueUpdateTechnology} = useForm({});
+
+    useEffect(() => {
+        setValueUpdateTechnology('name', dataTechnologyToChange?.name || '');
+    }, [dataTechnologyToChange])
+
+    const {mutate: mutateUpdateTechnology, error: errorPutTechnology} = useMutation({
+        mutationFn: putTechnology,
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['technologies']});
+            setIsOpenModalUpdateTechnology(false);
+            successUpdateTechnology();
+            // Limpiando los setters
+            setTechnologyImage(null);
+        },
+        onError: (e) => {
+            console.log(e);
+            errorUpdateTechnology();
+        }
+    });
+
+    const onSubmitUpdateTechnology = (dataForm) => 
+    {
+        mutateUpdateTechnology({
+            id: dataTechnologyToChange.id,
+            technologyData : {
+                name: dataForm.name,
+                image: technologyImage,
+            }
+        })
+    };
+    // -------------------------------------------Query Delete technology-----------------------------
+    const {mutate: mutateDeleteTechnology, error: errorDeleteTechnology} = useMutation({
+        mutationFn: deleteTechnology,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['technologies']});
+            successDeleteTechnologyMessage();
+        },
+        onError: (e) => {
+            console.log(e);
+            //Mensaje alert
+            errorDeleteTechnologyMessage();
+        }
+    });
+
+    const onSubmitDeleteTechnology = (id) => 
+    {
+        mutateDeleteTechnology({
+            id: id,
+        })
+    };
+
     return (
         <section className='section-admin'>
-            <div className='section-admin__contenedorPrincipal'>
+            <div className='section-admin__course-container'>
                 {contextHolderPostCourseSuccess}
                 {contextHolderUpdateCourseSuccess}
                 {contextHolderPostCourseError}
                 {contextHolderUpdateCourseError}
-                <div className='section-admin__contenedorPrincipal__contenedor-title-nuevoCurso'>
-                    <h3 className='section-admin__contenedorPrincipal__contenedor-title-nuevoCurso__title'>Listado de cursos</h3>
-                    <div className='section-admin__contenedorPrincipal__contenedor-title-nuevoCurso__botonNuevoCurso'
+                {contextHolderPostTechnologySuccess}
+                {contextHolderUpdateTechnologySuccess}
+                {contextHolderPostTechnologyError}
+                {contextHolderUpdateTechnologyError}
+                {contextHolderDeleteCourseError}
+                {contextHolderDeleteCourseSuccess}
+                {contextHolderDeleteTechnologySuccess}
+                {contextHolderDeleteTechnologyError}
+                <div className='section-admin__course-container__title-newCourse-container'>
+                    <h3 className='section-admin__course-container__title-newCourse-container__title'>Listado de cursos</h3>
+                    <div className='section-admin__course-container__title-newCourse-container__newCourseButton'
                         onClick={() => setIsOpenModalNewCourse(true) }
                     >
                         Nuevo curso
                         <MdPlaylistAdd />
                     </div>
                 </div>
-                <div className='section-admin__contenedorPrincipal__contenedor-table-curso'>
-                    <table className='section-admin__contenedorPrincipal__contenedor-table-curso__table'>
+                <div className='section-admin__course-container__course-table-container'>
+                    <table className='section-admin__course-container__course-table-container__table'>
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -237,7 +392,61 @@ const Admin = () =>
                                 <td> {itemCourse.price} </td>
                                 <td>
                                     <FaEdit onClick={() => saveDataCourseToChange(itemCourse)} />
-                                    <MdDelete />
+                                    <Popconfirm 
+                                        title={'Borrado de curso'}
+                                        description={'¿Esta segur@ de eliminar este curso?'}
+                                        onConfirm={() => onSubmitDeleteCourse(itemCourse.id)}
+                                        okText="Si"
+                                        cancelText="No"
+                                    >
+                                        <MdDelete />
+                                    </Popconfirm>
+                                </td>
+                            </tr>
+                            ))}
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div className='section-admin__technology-container'>
+                <div className='section-admin__technology-container__title-newTechnology-container'>
+                    <h3 className='section-admin__technology-container__title-newTechnology-container__title'>Listado de tecnologías</h3>
+                    <div 
+                        className='section-admin__technology-container__title-newTechnology-container__newTechnology-button'
+                        onClick={() => setIsOpenModalNewTechnology(true) }
+                    >
+                        Nueva tecnología
+                        <MdPlaylistAdd />
+                    </div>
+                </div>
+                <div className='section-admin__technology-container__technology-table-container'>
+                    <table className='section-admin__technology-container__technology-table-container__table'>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Imagen</th>
+                                <th>Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {dataTechnologies?.data?.map(itemTechnology =>(
+                            <tr key={itemTechnology.id}>
+                                <td> {itemTechnology.id} </td>
+                                <td> {itemTechnology.name} </td>
+                                <td> {itemTechnology.image} </td>
+                                <td>
+                                    <FaEdit onClick={() => saveDataTechnologyToChange(itemTechnology)} />
+                                    <Popconfirm 
+                                        title={'Borrado de tecnología'} 
+                                        description={'¿Esta segur@ de eliminar esta tecnología?'} 
+                                        confirm={() => onSubmitDeleteTechnology(itemTechnology.id)}
+                                        okText="Si"
+                                        cancelText="No"
+                                    >
+                                        <MdDelete/>
+                                    </Popconfirm>
                                 </td>
                             </tr>
                             ))}
@@ -314,7 +523,7 @@ const Admin = () =>
                                     <option key={itemAuthor.id} value={itemAuthor.id}> {itemAuthor.name} </option>
                                 ))}
                             </select>
-                            <span> {errorsPostCourse.author_id?.message} </span>
+                            <span> {errorsPostCourse.author?.message} </span>
                             {errorPost?.response.data.errors && errorPost.response.data.errors.author_id && errorPost.response.data.errors.author_id[0] && <span> {errorPost.response.data.errors.author_id[0]} </span> }
                         </div>
                         <div>
@@ -337,9 +546,8 @@ const Admin = () =>
                             name='cover_image'
                             accept=".jpeg, .jpg, .png, .gif"
                             onChange={handleCoverImage}
-                            {...registerPostCourse('cover_image')}
                         />
-                        <span> {errorsPostCourse.cover_image?.message} </span>
+                        {!fileCoverImage && <span> El campo portada imagen es obligatorio </span> }
                         {errorPost?.response.data.errors && errorPost.response.data.errors.cover_image && errorPost.response.data.errors.cover_image[0] && <span> {errorPost.response.data.errors.cover_image[0]} </span> }
                     </div>
                     <div className='div_file'>
@@ -350,9 +558,8 @@ const Admin = () =>
                             name='questions'
                             accept=".txt"
                             onChange={handleQuestionFile}
-                            {...registerPostCourse('questions')}
                         />
-                        <span> {errorsPostCourse.questions?.message} </span>
+                        {!fileQuestionsContent || fileQuestionsContent.length === 0 && <span> El campo preguntas es obligatorio </span> }
                         {errorPost?.response.data.errors && errorPost.response.data.errors.questions && errorPost.response.data.errors.questions[0] && <span> {errorPost.response.data.errors.questions[0]} </span> }
                     </div>
                 </form>
@@ -457,6 +664,64 @@ const Admin = () =>
                             onChange={handleQuestionFile}
                         />
                         {errorPutCourse?.response.data.errors && errorPutCourse.response.data.errors.questions && errorPutCourse.response.data.errors.questions[0] && <span> {errorPutCourse.response.data.errors.questions[0]} </span> }
+                    </div>
+                </form>
+            </Modal>
+
+            <Modal isOpen={isOpenModalNewTechnology} title={'Nueva tecnología'} onClose={() => setIsOpenModalNewTechnology(false)} buttonNameSuccess={'Guardar tecnología'} onSubmit={handleSubmitPostTechnology(onSubmitPostTechnology)}>
+                <form className='section-form'>
+                    <div>
+                        <label htmlFor="name">Nombre:</label>
+                        <input 
+                            type="text"
+                            id='name'
+                            name='name'
+                            {...registerPostTechnology('name')}
+                        />
+                        <span> {errorsPostTechnology.name?.message} </span>
+                        {errorPostTechnology?.response.data.errors && errorPostTechnology.response.data.errors.name && errorPostTechnology.response.data.errors.name[0] && <span> {errorPostTechnology.response.data.errors.name[0]} </span> }
+                    </div>
+                    <div className='div_file'>
+                    <label htmlFor="image">Imagen:</label>
+                        <input 
+                            type="file"
+                            id='image'
+                            name='image'
+                            accept=".jpeg, .jpg, .png, .gif"
+                            onChange={handleTechnologyImage}
+                        />
+                        {!technologyImage && <span> El campo imagen es obligatorio </span> }
+                        {errorPostTechnology?.response.data.errors && errorPostTechnology.response.data.errors.image && errorPostTechnology.response.data.errors.image[0] && <span> {errorPostTechnology.response.data.errors.image[0]} </span> }
+                    </div>
+                </form>
+            </Modal>
+
+            <Modal isOpen={isOpenModalUpdateTechnology} title={'Editar tecnología'} onClose={() => setIsOpenModalUpdateTechnology(false)} buttonNameSuccess={'Actualizar tecnología'} onSubmit={handleSubmitUpdateTechnology(onSubmitUpdateTechnology)}>
+                <form className='section-form'>
+                    <div>
+                        <label htmlFor="name">Nombre:</label>
+                        <input 
+                            type="text"
+                            id='name'
+                            name='name'
+                            {...registerUpdateTechnology('name')}
+                        />
+                        <span> {errorsPostTechnology.name?.message} </span>
+                        {errorPostTechnology?.response.data.errors && errorPostTechnology.response.data.errors.name && errorPostTechnology.response.data.errors.name[0] && <span> {errorPostTechnology.response.data.errors.name[0]} </span> }
+                    </div>
+                    <div className='div_file'>
+                    <label htmlFor="image">Imagen:</label>
+                        <input 
+                            type="file"
+                            id='image'
+                            name='image'
+                            accept=".jpeg, .jpg, .png, .gif"
+                            onChange={handleTechnologyImage}
+                        />
+                        {errorPutTechnology?.response.data.errors && errorPutTechnology.response.data.errors.image && errorPutTechnology.response.data.errors.image[0] && <span> {errorPutTechnology.response.data.errors.image[0]} </span> }
+                        {dataTechnologyToChange && dataTechnologyToChange.image ?
+                            <img src={`http://127.0.0.1:8000/storage/${dataTechnologyToChange.image}`} alt="image" width={80} />
+                        : null}
                     </div>
                 </form>
             </Modal>
