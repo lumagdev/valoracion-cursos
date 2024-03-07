@@ -8,6 +8,7 @@ use App\Models\Course;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 class CourseController extends Controller
 {
     public function getAllCourses()
@@ -16,7 +17,7 @@ class CourseController extends Controller
         {
             // if (Auth::user()->hasAnyRole(['admin', 'common']) )
             // {
-            $allCourses = Course::with('authors')->get();
+            $allCourses = Course::with(['authors','technologies'])->get();
             return response()->json([
                 'success' => true,
                 'data' => $allCourses,
@@ -42,7 +43,7 @@ class CourseController extends Controller
     {
         try
         {
-            $courseById = Course::with('authors')->find($id);
+            $courseById = Course::with((['authors','technologies']))->find($id);
 
             if (!isset($courseById)) 
             {
@@ -79,6 +80,12 @@ class CourseController extends Controller
                 'cover_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'questions' => 'required|array',
                 'author_id' => 'required',
+                //Dato solo enviado por front, no se guarda en Course
+                'technologies' => 'required|array',
+                'technologies.*' => [
+                    'required',
+                    Rule::exists('technologies', 'id'), // Verifica que las tecnologías existan en la base de datos
+                ],
             ];
 
             $validations_messages = [
@@ -88,6 +95,9 @@ class CourseController extends Controller
                 'mimes' => 'El campo :attribute debe ser una imagen en formato JPEG, PNG, JPG o GIF.',
                 'max' => 'El campo :attribute no debe ser mayor de 2 MB.',
                 'array' => 'El campo :attribute debe ser un array',
+                'technologies.required' => 'Debe seleccionar al menos una tecnología.',
+                'technologies.*.required' => 'El campo tecnología es obligatorio.',
+                'technologies.*.exists' => 'Una o más tecnologías seleccionadas no existen en la base de datos.',
             ];
         
             try 
@@ -125,6 +135,10 @@ class CourseController extends Controller
             $createdCourse->author_id = $request->input('author_id');
             
             $createdCourse->save();
+
+            // Asignamos tecnologías al curso
+            $technologies = $request->input('technologies');
+            $createdCourse->technologies()->attach($technologies);
 
             return response()->json([
                 'success' => true,
@@ -164,6 +178,11 @@ class CourseController extends Controller
                 'cover_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
                 'questions' => 'string|array',
                 'author_id' => 'numeric',
+                'technologies' => 'required|array',
+                'technologies.*' => [
+                    'required',
+                    Rule::exists('technologies', 'id'), // Verifica que las tecnologías existan en la base de datos
+                ],
             ];
     
             $validations_messages = [
@@ -173,6 +192,8 @@ class CourseController extends Controller
                 'mimes' => 'El campo :attribute debe ser una imagen en formato JPEG, PNG, JPG o GIF.',
                 'max' => 'El campo :attribute no debe ser mayor de 2 MB.',
                 'array' => 'El campo :attribute debe ser un array',
+                'technologies.*.required' => 'El campo tecnología es obligatorio.',
+                'technologies.*.exists' => 'Una o más tecnologías seleccionadas no existen en la base de datos.',
             ];
         
             try 
@@ -209,6 +230,13 @@ class CourseController extends Controller
             }
     
             $updatedCourse->save();
+
+            // Asignamos tecnologías al curso
+            if ($request->has('technologies')) {
+                $technologies = $request->input('technologies');
+                $updatedCourse->technologies()->sync($technologies);
+            }
+
     
             return response()->json([
                 'success' => true,
@@ -255,6 +283,60 @@ class CourseController extends Controller
                 'message' => 'An error occurred while deleting the course',
                 'error' => $error->getMessage()
             ], 500); 
+        }
+    }
+
+    public function getTopHighestCourses()
+    {
+        try 
+        {
+            $topCourses = Course::getCoursesWithHighestRatings(3);
+
+            return response()->json([
+                'success' => true,
+                'data' => $topCourses,
+                'message' => 'Top rated courses retrieved successfully'
+            ], 200);
+
+        } catch (\Exception $error)
+        {
+            return response()->json([
+                'message' => 'An error occurred while retrieving top rated course',
+                'error' => $error->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getCourseReviewsCount($id)
+    {
+        try 
+        {
+            $course = Course::find($id);
+
+            if (!isset($course)) 
+            {
+                return response()->json([
+                    'message' => 'No Course with that id has been found'
+                ], 404);
+            }
+
+            $reviewsCount = $course->reviews()->count();
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    "course_id" => $id,
+                    'reviews_count' => $reviewsCount
+                ],
+                'message' => 'Reviews count retrieved successfully'
+            ], 200);
+
+        } catch (\Exception $error)
+        {
+            return response()->json([
+                'message' => 'An error occurred while retrieving reviews count',
+                'error' => $error->getMessage()
+            ], 500);
         }
     }
 }

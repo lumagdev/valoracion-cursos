@@ -1,5 +1,4 @@
 import React from 'react'
-import { FaStar, FaStarHalfAlt, FaRegStar} from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 import "./CourseCard.scss";
 import imagencurso from "../../Assets/curso-brais-python.jpg";
@@ -36,7 +35,7 @@ const CourseCard = ({dataCourses, description}) =>
                         </div>
                         <div className='card-container__coverImage-tags-row'>
                             <figure className='card-container__coverImage-tags-row__coverImage-container'>
-                                <img src={imagencurso} alt="cover_image" />
+                                <img src={`http://127.0.0.1:8000/storage/${itemCourse.cover_image}`} alt="cover_image" />
                             </figure>
                             <div className='card-container__coverImage-tags-row__tags-container'>
                                 <figure className='card-container__coverImage-tags-row__tags-container__tagImage-container'>

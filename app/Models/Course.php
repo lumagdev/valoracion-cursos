@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Course extends Model
 {
@@ -24,11 +25,23 @@ class Course extends Model
     // Relation N:M with technologies
     public function technologies(): BelongsToMany
     {
-        return $this->belongsToMany(Technology::class, 'course_technology','course_id', 'technology_id');
+        return $this->belongsToMany(Technology::class, 'courses_technologies','course_id', 'technology_id');
+    }
+
+    // Relation M:M with User
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
     }
 
     public function authors(): BelongsTo
     {
         return $this->belongsTo(Author::class, 'author_id');
+    }
+
+    //Obtener los 3 mejores cursos
+    public static function getCoursesWithHighestRatings($limit = 3)
+    {
+        return Course::with((['authors','technologies']))->orderBy('rating','desc')->take($limit)->get();
     }
 }
