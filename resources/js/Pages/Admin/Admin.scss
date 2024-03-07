@@ -7,8 +7,9 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    gap: 4em;
 
-    &__contenedorPrincipal
+    &__course-container
     {
         border: 1px solid $TURQUOISE;
         width: 92%;
@@ -17,7 +18,7 @@
         align-items: center;
         gap: 30px;
 
-        &__contenedor-title-nuevoCurso
+        &__title-newCourse-container
         {
             width: 100%;
             display: flex;
@@ -30,7 +31,7 @@
                 font-size: 30px;
                 font-family: $TITLES;
             }
-            &__botonNuevoCurso
+            &__newCourseButton
             {
                 background-color: #0ABAC2;
                 display: flex;
@@ -40,6 +41,7 @@
                 font-size: 21px;
                 padding: 10px;
                 cursor: pointer;
+                border-radius: 6px;
 
                 & > svg
                 {
@@ -48,7 +50,7 @@
             }
         }
     
-        &__contenedor-table-curso
+        &__course-table-container
         {
             width: 97%;
             max-width: 100%;
@@ -79,6 +81,87 @@
                 & > tbody > tr > td > svg
                 {
                     font-size: 27px;
+                }
+                & > tbody > tr > td > svg:nth-child(1)
+                {
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
+    &__technology-container
+    {
+        border: 1px solid $TURQUOISE;
+        width: 92%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+
+        &__title-newTechnology-container
+        {
+            width: 100%;
+            display: flex;
+            justify-content: space-evenly;
+            margin-top: 30px;
+            &__title
+            {
+                margin: 0;
+                font-size: 30px;
+                font-family: $TITLES;
+            }
+            &__newTechnology-button
+            {
+                background-color: #0ABAC2;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 8px;
+                font-size: 21px;
+                padding: 10px;
+                cursor: pointer;
+                border-radius: 6px;
+
+                & > svg
+                {
+                    font-size: 27px
+                }
+            }
+        }
+        &__technology-table-container
+        {
+            width: 97%;
+            max-width: 100%;
+            margin-bottom: 30px;
+            overflow-x: auto;
+            display: flex;
+            justify-content: center;
+
+            &__table
+            {
+                width: max-content;
+                border-collapse: collapse;
+                border: 2px solid black;
+                background-color: $CANTALOUPE;
+                
+                & > thead > tr > th
+                {
+                    border: 2px solid black;
+                    text-align: start;
+                    padding: 8px;
+                    font-size: 22px;
+                }
+                
+                & > tbody > tr > td
+                {
+                    border: 2px solid black;
+                    padding: 8px;
+                    font-size: 20px;
+                }
+                & > tbody > tr > td > svg
+                {
+                    font-size: 27px;
+                    cursor: pointer !important;
                 }
                 & > tbody > tr > td > svg:nth-child(1)
                 {

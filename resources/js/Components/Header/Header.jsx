@@ -32,7 +32,9 @@ const Header = () =>
                         <li className="header__nav__contenedor-menu1__ul__li">
                             <NavLink to={"/"}>Home</NavLink>
                         </li>
-                        <li className="header__nav__contenedor-menu1__ul__li">Cursos</li>
+                        <li className="header__nav__contenedor-menu1__ul__li">
+                            <NavLink to={"/courses-list"}>Cursos</NavLink>
+                        </li>
                         <li className="header__nav__contenedor-menu1__ul__li">Plataformas</li>
                         <li className="header__nav__contenedor-menu1__ul__li oculto-escritorio"> Desarrolladores</li>
                         <li className="header__nav__contenedor-menu1__ul__li oculto-escritorio"> Contacto</li>
