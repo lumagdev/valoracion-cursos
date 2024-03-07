@@ -231,4 +231,25 @@ class AuthorController extends Controller
             ], 500); 
         }
     }
+
+    public function getTopHighestAuthors()
+    {
+        try 
+        {
+            $topAuthors = Author::getAuthorsWithHighestRatings(3);
+
+            return response()->json([
+                'success' => true,
+                'data' => $topAuthors,
+                'message' => 'Top rated authors retrieved successfully'
+            ], 200);
+
+        } catch (\Exception $error)
+        {
+            return response()->json([
+                'message' => 'An error occurred while retrieving top rated authors',
+                'error' => $error->getMessage()
+            ], 500);
+        }
+    }
 }
