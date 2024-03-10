@@ -5,6 +5,7 @@ import Home from "../Pages/Home/Home";
 import Register from "../Pages/Register/Register";
 import Unauthorized from "../Pages/Unauthorized/Unauthorized";
 import Courses from "../Pages/Courses/Courses";
+import CourseDetail from "../Pages/CourseDetail/CourseDetail";
 
 const routes = [
     {
@@ -34,7 +35,7 @@ const routes = [
     },
     {
         path: "/course-detail/:id",
-        element: <Courses/>,
+        element: <CourseDetail/>,
         isPrivate: false
     },
     {

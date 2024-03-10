@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('reviews', function (Blueprint $table) {
             $table->id('id');
             $table->double('user_rating');
-            $table->string('comment');
+            $table->string('title', 50);
+            $table->string('comment', 300);
             $table->json('answers')->nullable();
             $table->json('questionnaire')->nullable();
 

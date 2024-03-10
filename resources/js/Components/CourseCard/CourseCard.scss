@@ -83,7 +83,7 @@
             {
                 & > svg
                 {
-                    font-size: 25px;
+                    font-size: 30px;
                     color: $TURQUOISE;
                     @include mobile
                     {
@@ -135,7 +135,7 @@
             width: 86%;
             height: 417px;
             overflow: hidden;
-            cursor: pointer;
+            //cursor: pointer;
             border-radius: 10px;
             @include mobile
             {
@@ -244,6 +244,16 @@
                 font-size: 25px;
                 font-family: $TITLES;
                 text-decoration: underline;
+
+                &.--oculto
+                {
+                    display: none;
+                }
+                &.--muestra
+                {
+                    display: block;
+                }
+
                 @include mobile
                 {
                     font-size: 18px;

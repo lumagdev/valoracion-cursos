@@ -18,7 +18,7 @@ class UserController extends Controller
     {
         try 
         {
-            $allUsers = User::all();
+            $allUsers = User::with(['reviews'])->all();
             return response()->json([
                 'success' => true,
                 'data' => $allUsers,
@@ -38,7 +38,7 @@ class UserController extends Controller
     {
         try 
         {
-            $userById = User::find($id);
+            $userById = User::with(['reviews','courses'])->find($id);
 
             if (!isset($userById)) 
             {
@@ -67,12 +67,14 @@ class UserController extends Controller
         try 
         {
             $validations = [
-                'name' => 'required',
+                'name' => 'string',
+                'username' => 'required',
                 'email' => 'required|email|unique:users',
                 'password' => 'required|min:6',
             ];
     
             $validations_messages = [
+                'string' => 'El campo :attributte debe ser un string',
                 'required' => 'El campo :attribute es obligatorio.',
                 'email' => 'El campo :attribute debe ser una dirección de correo válida.',
                 'unique' => 'El campo :attribute ya existe.',
@@ -92,6 +94,7 @@ class UserController extends Controller
             
             $createdUser = User::create([
                 'name' => $request->name,
+                'username' => $request->username,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
             ]);
@@ -117,7 +120,7 @@ class UserController extends Controller
         {
             $updatedUser = User::find($id);
 
-            if (!isset($updatedUser)) 
+            if (!$updatedUser) 
             {
                 return response()->json([
                     'message' => 'No user with that id has been found'
@@ -125,13 +128,14 @@ class UserController extends Controller
             }
             
             $validations = [
-                'name' => 'required',
-                'email' => 'required|email|unique:users',
-                'password' => 'required|min:6',
+                'name' => 'string',
+                'username' => 'string',
+                'email' => 'email|unique:users,email,' . $updatedUser->id,
+                'password' => 'sometimes|min:6',
             ];
 
             $validations_messages = [
-                'required' => 'El campo :attribute es obligatorio.',
+                'string' => 'El campo :attribute debe ser un string.',
                 'email' => 'El campo :attribute debe ser una dirección de correo válida.',
                 'unique' => 'El campo :attribute ya existe.',
                 'min' => 'El campo :attribute debe tener al menos :min caracteres.',
@@ -148,10 +152,22 @@ class UserController extends Controller
                 ], 422); 
             }
 
-            $updatedUser->name = $request->input('name');
-            $updatedUser->email = $request->input('email');
-            $updatedUser->password = Hash::make($request->input('password'));
-            
+            $fieldsToUpdate = ['name','username','email','password'];
+
+            foreach ($fieldsToUpdate as $field)
+            {
+                if ($request->has($field))
+                {
+                    if ($field === 'password' && $request->filled('password')) 
+                    {
+                        $updatedUser->{$field} = Hash::make($request->input($field));
+                    } else 
+                    {
+                        $updatedUser->{$field} = $request->input($field);
+                    }
+                }
+            }
+
             $updatedUser->save();
 
             return response()->json([

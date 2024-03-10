@@ -17,11 +17,11 @@ class CourseController extends Controller
         {
             // if (Auth::user()->hasAnyRole(['admin', 'common']) )
             // {
-            $allCourses = Course::with(['authors','technologies'])->get();
+            $allCourses = Course::with(['authors','technologies','reviews'])->get();
             return response()->json([
                 'success' => true,
                 'data' => $allCourses,
-                'message' => 'Request OK'
+                'message' => 'All courses retrieving successfully'
             ], 200);
             // }
             // else
@@ -43,7 +43,7 @@ class CourseController extends Controller
     {
         try
         {
-            $courseById = Course::with((['authors','technologies']))->find($id);
+            $courseById = Course::with(['authors','technologies','reviews'])->find($id);
 
             if (!isset($courseById)) 
             {
@@ -53,8 +53,8 @@ class CourseController extends Controller
             }
             return response()->json([
                 'success' => true,
-                'data' => $courseById,
-                'message' => 'Request OK'
+                'data' => [$courseById],
+                'message' => 'Course retrieving successfully'
             ], 200);
         }
         catch(\Exception $error)

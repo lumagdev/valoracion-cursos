@@ -13,11 +13,11 @@ class ReviewController extends Controller
     {
         try 
         {
-            $allReviews = Review::all();
+            $allReviews = Review::with(['user','course'])->get();
             return response()->json([
                 'success' => true,
                 'data' => $allReviews,
-                'message' => 'Request OK'
+                'message' => 'All reviews retrieving successfully'
             ], 200);
 
         } catch (\Exception $error) 
@@ -33,7 +33,7 @@ class ReviewController extends Controller
     {
         try 
         {
-            $reviewById = Review::find($id);
+            $reviewById = Review::with(['user','course'])->find($id);
 
             if (!isset($reviewById)) 
             {
@@ -44,7 +44,7 @@ class ReviewController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $reviewById,
-                'message' => 'Request OK'
+                'message' => 'Course by id retrieving successfully'
             ], 200);
 
         } catch (\Exception $error) 
@@ -112,7 +112,7 @@ class ReviewController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $createdReview,
-                'message' => 'Technology created successfully'
+                'message' => 'Review created successfully'
             ], 201);       
         
         } catch (\Exception $error) {
@@ -216,6 +216,47 @@ class ReviewController extends Controller
                 'message' => 'An error occurred while deleting the review',
                 'error' => $error->getMessage()
             ], 500);  
+        }
+    }
+
+    public function getAllReviewsOfACourse($courseId)
+    {
+        try 
+        {
+            $allReviewsByCourse = Review::with(['user'])->where('course_id', $courseId)->get();
+            return response()->json([
+                'success' => true,
+                'data' => $allReviewsByCourse,
+                'message' => 'Reviews of a course retrieving successfully'
+            ], 200);
+
+        } catch (\Exception $error) 
+        {
+            return response()->json([
+                'message' => 'Error getting reviews',
+                'error' => $error->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getAllReviewsOfAUser($userId)
+    {
+        try 
+        {
+            //Trae todas las reviews del usuario con la informacion de los cursos y sus autores
+            $allReviewsByUser = Review::with(['course.authors'])->where('user_id', $userId)->get();
+            return response()->json([
+                'success' => true,
+                'data' => $allReviewsByUser,
+                'message' => 'Reviews of a user retrieving successfully'
+            ], 200);
+
+        } catch (\Exception $error) 
+        {
+            return response()->json([
+                'message' => 'Error getting reviews',
+                'error' => $error->getMessage()
+            ], 500);
         }
     }
 }

@@ -22,7 +22,7 @@ class Course extends Model
     {
         return $this->belongsToMany(User::class, 'reviews', 'course_id', 'user_id');
     }
-    // Relation N:M with technologies
+    // Relation N:M with technology
     public function technologies(): BelongsToMany
     {
         return $this->belongsToMany(Technology::class, 'courses_technologies','course_id', 'technology_id');
