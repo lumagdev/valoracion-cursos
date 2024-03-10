@@ -34,7 +34,7 @@ const Courses = () =>
                 </div>
             </section>
             <section className='section-courses__courses-cards'>
-                <CourseCard dataCourses={dataCourses} descripcion={false} />
+                <CourseCard dataCourses={dataCourses} descripcion={false} moreDetails={true} goWebsite={false} />
             </section>
             <section className='section-courses__pagination'>
                 <div> &lt; Anterior</div>

@@ -36,9 +36,13 @@ Route::get('/courses/count-reviews/{id}', [CourseController::class, 'getCourseRe
 Route::get('/technologies', [TechnologyController::class, 'getAllTechnologies'])->name('technologies.allTechnologies');
 Route::get('/technologies/{id}', [TechnologyController::class, 'getTechnologyById'])->name('technologies.technologyById');
 
+//Review
+Route::get('/reviews/reviews-by-course/{id}', [ReviewController::class, 'getAllReviewsOfACourse'])->name('reviews.allReviewsOfACourse');
+
 //Author
 Route::get('/authors/top-authors', [AuthorController::class, 'getTopHighestAuthors'])->name('authors.topAuthors');
-// Rutas que requieren autenticacion.
+
+// --------------------------RUTAS QUE REQUIEREN AUTENTICACIÓN.
 Route::middleware(['auth:sanctum'])->group(function ()
 {
     Route::get('logout', [AuthController::class, 'logout']);
@@ -50,10 +54,10 @@ Route::middleware(['auth:sanctum'])->group(function ()
 
         // User
         Route::get('/users', [UserController::class, 'getAllUsers'])->name('users.allUsers');
-        Route::get('/users/{id}', [UserController::class, 'getUserById'])->name('users.userById');
+        
         Route::post('/users/create', [UserController::class, 'createUser'])->name('users.createUser');
         //Route::put('/users/update/{id}', [UserController::class, 'updateUser'])->name('users.updateUser');
-        Route::delete('/users/delete/{id}', [UserController::class, 'deleteUser'])->name('users.deleteUser');
+        
         
         // Author
         Route::post('/authors/create', [AuthorController::class, 'createAuthor'])->name('authors.createAuthor');
@@ -76,14 +80,16 @@ Route::middleware(['auth:sanctum'])->group(function ()
         Route::delete('/courses/delete/{id}', [CourseController::class, 'deleteCourse'])->name('courses.deleteCourse');
     });
 
-    /* ------------------- Rutas específicas para el rol de 'common'------------ */
+    /* ---------------------------------- RUTAS ESPECÍFICAS PARA EL ROL "COMMON"----------------------------- */
     Route::group(['middleware' => ['role:common']], function () {
-        
         // Users
         Route::put('/users/update/{id}', [UserController::class, 'updateUser'])->name('users.updateUser');
     });
 
-    /*----------------- RUTAS EN COMÚN---------------------------------------- */
+    /*--------------------------------- RUTAS EN COMÚN---------------------------------------- */
+    Route::get('/users/{id}', [UserController::class, 'getUserById'])->name('users.userById');
+    Route::delete('/users/delete/{id}', [UserController::class, 'deleteUser'])->name('users.deleteUser');
+
     // Author
     Route::get('/authors', [AuthorController::class, 'getAllAuthors'])->name('authors.allAuthors');
 
@@ -91,4 +97,5 @@ Route::middleware(['auth:sanctum'])->group(function ()
     Route::post('/reviews/create', [ReviewController::class, 'createReview'])->name('reviews.createReview');
     Route::put('/reviews/update/{id}', [ReviewController::class, 'updateReview'])->name('reviews.updateReview');
     Route::delete('/reviews/delete/{id}', [ReviewController::class, 'deleteReview'])->name('reviews.deleteReview');
+    Route::get('/reviews/reviews-by-user/{id}', [ReviewController::class, 'getAllReviewsOfAUser'])->name('reviews.allReviewsOfAUser');
 });

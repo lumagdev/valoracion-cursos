@@ -1,0 +1,209 @@
+@use "../../Styles/" as *;
+
+.course-detail
+{
+    padding: 175px 0px 50px 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4em;
+    &__course-card
+    {
+        width: 78%;
+    }
+
+    &__reviews
+    {
+        width: 78%;
+        display: grid;
+        grid-template-columns: repeat(2,1fr);
+        gap: 1em;
+        &__allReviews
+        {
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+            border: 5px solid $TURQUOISE;
+            padding: 1em;
+            &__buttons
+            {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                & > button
+                {
+                    border: 0;
+                    background-color: #0ABAC2;
+                    font-size: 21px;
+                    padding: 0.5em;
+                    border-radius: 7px;
+                    cursor: pointer;
+                    transition: box-shadow 0.3s ease;
+                    display: flex;
+                    justify-content: space-between;
+                    width: 38%;
+                    & > svg
+                    {
+                        font-weight: bold;
+                        font-size: 25px;
+                    }
+                }
+                & > button:hover
+                {
+                    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+                }
+                & > a
+                {
+                    background-color: #0ABAC2;
+                    font-size: 21px;
+                    padding: 0.5em;
+                    border-radius: 7px;
+                    cursor: pointer;
+                    transition: box-shadow 0.3s ease;
+                    display: flex;
+                    justify-content: space-between;
+                    width: 38%;
+                    & > svg
+                    {
+                        font-weight: bold;
+                        font-size: 25px;
+                    }
+                }
+                & > a:hover
+                {
+                    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+                }
+            }
+
+            &__reviews-container
+            {
+                display: flex;
+                flex-direction: column;
+                gap: 2em;
+                &__review-card
+                {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1em;
+                    background-color: $CANTALOUPE;
+                    border-radius: 7px;
+                    padding: 1.2em;
+                    &__title-rating
+                    {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        gap: 0.8em;
+                        & > p
+                        {
+                            font-size: 21px;
+                            font-weight: bold;
+                        }
+                        & > div
+                        {
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            
+                            & > svg
+                            {
+                                font-size: 24px;
+                                color: $TURQUOISE;
+                            }
+                            & > p
+                            {
+                                margin-left: 5px;
+                                font-weight: bold;
+                            }
+                        }
+                    }
+                    &__comment
+                    {
+                        font-size: 18px;
+                    }
+                    &__view-allReview-button
+                    {
+                        border: 0;
+                        background-color: $TURQUOISE;
+                        align-self: flex-end;
+                        font-size: 18px;
+                        padding: 0.6em;
+                        border-radius: 7px;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+
+        &__review-detail
+        {
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+            border: 5px solid $TURQUOISE;
+            padding: 1em;
+            &__user-allComment
+            {
+                display: flex;
+                flex-direction: column;
+                gap: 1em;
+                &__user-stars
+                {
+                    display: flex;
+                    flex-direction: row;
+                    gap: 1em;
+                    & > p
+                    {
+                        font-size: 22px;
+                    }
+                    & > div
+                    {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        
+                        & > svg
+                        {
+                            font-size: 24px;
+                            color: $TURQUOISE;
+                        }
+                        & > p
+                        {
+                            margin-left: 5px;
+                            font-weight: bold;
+                        }
+                    }
+                }
+                &__allComment
+                {
+                    font-size: 19px;
+                }
+            }
+
+            &__questionnaire
+            {
+                display: flex;
+                flex-direction: column;
+                gap: 1em;
+                background-color: $CANTALOUPE;
+                padding: 1.2em;
+                border-radius: 7px;
+                &__question-answer-container
+                {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.4em;
+                    &__question
+                    {
+                        font-weight: bold;
+                        font-size: 21px;
+                    }
+                    &__answer
+                    {
+                        font-size: 19px;
+                    }
+                }
+            }
+        }
+    }
+}
