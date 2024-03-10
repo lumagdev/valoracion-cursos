@@ -62,11 +62,10 @@ class ReviewController extends Controller
         try 
         {
             $validations = [
-                'name' => 'required',
                 'user_rating' => 'required|numeric',
                 'comment' => 'required',
                 'answers' => 'required|array',
-                'questionnarie' => 'required|array',
+                'questionnaire' => 'required|array',
                 'user_id' => 'required',
                 'course_id' => 'required',
             ];
@@ -87,13 +86,24 @@ class ReviewController extends Controller
                     'errors' => $error->errors()
                 ], 422); 
             }
+
+            // Verificar si ese usuario ya ha creado una review de ese curso
+            $user_id = $request->input('user_rating');
+            $course_id = $request->input('course_id');
+            $existingReview = Review::where('user_rating',$user_id)->where('course_id',$course_id)->first();
+
+            if ($existingReview) 
+            {
+                return response()->json([
+                    'message' => 'Ya has creado una opinión en este curso',
+                ], 422); 
+            }
     
             $createdReview = new Review;
-            $createdReview->name = $request->input('name');
             $createdReview->user_rating = $request->input('user_rating');
             $createdReview->comment = $request->input('comment');
             $createdReview->answers = $request->input('answers');
-            $createdReview->questionnarie = $request->input('questionnarie');
+            $createdReview->questionnaire = $request->input('questionnaire');
             $createdReview->user_id = $request->input('user_id');
             $createdReview->course_id = $request->input('course_id');
     
@@ -128,18 +138,18 @@ class ReviewController extends Controller
             }
 
             $validations = [
-                'name' => 'required',
-                'user_rating' => 'required|numeric',
-                'comment' => 'required',
-                'answers' => 'required',
-                'questionnarie' => 'required',
-                'user_id' => 'required',
-                'course_id' => 'required',
+                'user_rating' => 'numeric',
+                'comment' => 'string',
+                'answers' => 'array',
+                'questionnaire' => 'array',
+                'user_id' => 'numeric',
+                'course_id' => 'numeric',
             ];
 
             $validations_messages = [
                 'required' => 'El campo :attribute es obligatorio.',
                 'numeric' => 'El campo :attribute debe ser numerico',
+                'array' => 'El campo :attribute debe ser un array'
             ];
         
             try 
@@ -153,13 +163,15 @@ class ReviewController extends Controller
                 ], 422); 
             }
 
-            $updatedReview->name = $request->input('name');
-            $updatedReview->user_rating = $request->input('user_rating');
-            $updatedReview->comment = $request->input('comment');
-            $updatedReview->answers = $request->input('answers');
-            $updatedReview->questionnarie = $request->input('questionnarie');
-            $updatedReview->user_id = $request->input('user_id');
-            $updatedReview->course_id = $request->input('course_id');
+            $fieldsToUpdate = ['user_rating','comment','answers','questionnaire','user_id','course_id'];
+            
+            foreach ($fieldsToUpdate as $field)
+            {
+                if ($request->has($field))
+                {
+                    $updatedReview->{$field} = $request->input($field);
+                }
+            }
 
             $updatedReview->save();
 

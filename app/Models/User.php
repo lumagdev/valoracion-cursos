@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Models\Role;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -50,6 +51,12 @@ class User extends Authenticatable
     public function courses(): BelongsToMany
     {
         return $this->belongsToMany(Course::class, 'reviews', 'user_id', 'course_id');
+    }
+
+    // Relation M:M with User
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
     }
 
     // Define una función que verifica si un usuario tiene un rol específico

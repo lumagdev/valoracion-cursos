@@ -20,17 +20,24 @@ use App\Http\Controllers\Api\CourseController;
 |
 */
 
+// OJO: El orden de las rutas si importan en Laravel!!!!
+
 // AUTH
 Route::post('register', [AuthController::class, 'register'])->withoutMiddleware(['auth:sanctum']);
 Route::post('login', [AuthController::class, 'login'])->withoutMiddleware(['auth:sanctum']);
 
 // Course
 Route::get('/courses', [CourseController::class, 'getAllCourses'])->name('courses.allCourses');
+Route::get('/courses/top-courses', [CourseController::class, 'getTopHighestCourses'])->name('courses.topCourses');
 Route::get('/courses/{id}', [CourseController::class, 'getCourseById'])->name('courses.courseById');
+Route::get('/courses/count-reviews/{id}', [CourseController::class, 'getCourseReviewsCount'])->name('courses.totalReviewsByCourse');
+
 // Technology
 Route::get('/technologies', [TechnologyController::class, 'getAllTechnologies'])->name('technologies.allTechnologies');
 Route::get('/technologies/{id}', [TechnologyController::class, 'getTechnologyById'])->name('technologies.technologyById');
 
+//Author
+Route::get('/authors/top-authors', [AuthorController::class, 'getTopHighestAuthors'])->name('authors.topAuthors');
 // Rutas que requieren autenticacion.
 Route::middleware(['auth:sanctum'])->group(function ()
 {
@@ -49,8 +56,8 @@ Route::middleware(['auth:sanctum'])->group(function ()
         Route::delete('/users/delete/{id}', [UserController::class, 'deleteUser'])->name('users.deleteUser');
         
         // Author
-        Route::get('/authors/{id}', [AuthorController::class, 'getAuthorById'])->name('authors.AuthorById');
         Route::post('/authors/create', [AuthorController::class, 'createAuthor'])->name('authors.createAuthor');
+        Route::get('/authors/{id}', [AuthorController::class, 'getAuthorById'])->name('authors.AuthorById');
         Route::put('/authors/update/{id}', [AuthorController::class, 'updateAuthor'])->name('authors.updateAuthor');
         Route::delete('/authors/delete/{id}', [AuthorController::class, 'deleteAuthor'])->name('authors.deleteAuthor');
         

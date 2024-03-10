@@ -4,9 +4,11 @@ import { TiThMenu } from "react-icons/ti";
 import { FaRegWindowClose } from "react-icons/fa";
 import "./Header.scss";
 import { useState } from "react";
+import useUserStore from "../../Store/useUserStore";
 const Header = () => 
 {
     const [showMenu, setShowMenu] = useState(false);
+    const user = useUserStore.getState().user;
 
     return (
         <header className="header">
@@ -35,7 +37,7 @@ const Header = () =>
                         <li className="header__nav__contenedor-menu1__ul__li">
                             <NavLink to={"/courses-list"}>Cursos</NavLink>
                         </li>
-                        <li className="header__nav__contenedor-menu1__ul__li">Plataformas</li>
+                        {/* <li className="header__nav__contenedor-menu1__ul__li">Plataformas</li> */}
                         <li className="header__nav__contenedor-menu1__ul__li oculto-escritorio"> Desarrolladores</li>
                         <li className="header__nav__contenedor-menu1__ul__li oculto-escritorio"> Contacto</li>
                     </ul>
@@ -46,10 +48,10 @@ const Header = () =>
                     </figure>
                 </div>
                 <ul className={`header__nav__ul menu2 ${showMenu ? 'activo' : ''} `}>
-                    <li className="header__nav__ul__li oculto-movil">Desarrolladores</li>
+                    {/* <li className="header__nav__ul__li oculto-movil">Desarrolladores</li> */}
                     <li className="header__nav__ul__li oculto-movil">Contacto</li>
                     <li className="header__nav__ul__li">
-                        <NavLink to={"/profile"}>Usuario</NavLink>
+                        <NavLink to={"/profile"}> {user ? 'Perfil' : 'Iniciar sesión' } </NavLink>
                     </li>
                 </ul>
                 

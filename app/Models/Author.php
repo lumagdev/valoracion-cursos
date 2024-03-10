@@ -17,4 +17,9 @@ class Author extends Model
     {
         return $this->hasMany(Course::class);
     }
+
+    public static function getAuthorsWithHighestRatings($limit = 3)
+    {
+        return self::orderBy('author_rating', 'desc')->take($limit)->get();
+    }
 }
