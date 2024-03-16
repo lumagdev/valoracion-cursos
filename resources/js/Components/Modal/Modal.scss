@@ -35,12 +35,21 @@
         &__body
         {
             padding: 0px 40px;
+            @include mobile {
+                padding: 0px 10px;
+            }
         }
         &__footer
         {
             padding: 30px 40px;
             display: flex;
             justify-content: flex-end;
+            gap: 40px;
+            @include mobile {
+                padding: 30px 10px;
+                justify-content: flex-end;
+                gap: 20px;
+            }
             & > button
             {
                 background-color: $TURQUOISE;
@@ -48,11 +57,14 @@
                 padding: 14px 52px;
                 font-size: 24px;
                 cursor: pointer;
+                @include mobile {
+                    font-size: 16px;
+                    padding: 10px 15px;
+                }
             }
             & > button:nth-child(1)
             {
                 color: red;
-                margin-right: 3em;
             }
         }
     }

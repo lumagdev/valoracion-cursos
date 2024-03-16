@@ -1,4 +1,4 @@
-import React from "react";
+import {React, useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../Components/Logo/Logo";
 import "./Register.scss";
@@ -7,12 +7,20 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { postRegister } from "../../Services/Auth/postRegister";
+import useUserStore from "../../Store/useUserStore";
 const RegisterForm = () => 
 {
     const navigate = useNavigate();
+    const { isAuth } = useUserStore();
+
+    useEffect(() => 
+    {
+        if (isAuth) navigate('/profile');
+    }, []);
 
     const schema = yup.object({
         name: yup.string().required('El nombre es obligatorio.').min(4, 'Debe ser un nombre con un mínimo de 4 caracteres'),
+        username: yup.string().required('El nombre de usuario es obligatorio.').min(4, 'Debe ser un nombre con un mínimo de 4 caracteres').max(50, 'Es muy largo no pases de 50 caracteres'),
         email: yup.string().required('El email es obligatorio.').email('Formato email inválido.'),
         password: yup.string().required('Introduce la contraseña.').min(8, 'Debe ser un nombre con un mínimo de 8 caracteres')    
     })
@@ -37,6 +45,7 @@ const RegisterForm = () =>
     {
         mutate({
             name: dataForm.name,
+            username: dataForm.username,
             email: dataForm.email,
             password: dataForm.password
         })
@@ -48,7 +57,7 @@ const RegisterForm = () =>
                 <h1 className='section-register__contenedor-register__title'>Register</h1>
                 <p className='section-register__contenedor-register__parrafo-inicia-sesion'>¿Ya tienes cuenta? <span><Link to={'/login'}>Inicia sesión</Link></span> </p>
                 <form className='section-register__contenedor-register__form' onSubmit={handleSubmit(onSubmit)}>
-                    <label htmlFor="name">Username</label>
+                    <label htmlFor="name">Nombre:</label>
                     <input
                         type="text"
                         id="name"
@@ -57,11 +66,20 @@ const RegisterForm = () =>
                     />
                     <span>{errors.name?.message}</span>
                     {error?.response.data.errors && error.response.data.errors.name && error.response.data.errors.name[0] && <span> {error.response.data.errors.name[0]} </span> }
+                    <label htmlFor="username">Nombre de usuario</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        {...register('username')}
+                    />
+                    <span>{errors.username?.message}</span>
+                    {error?.response.data.errors && error.response.data.errors.username && error.response.data.errors.username[0] && <span> {error.response.data.errors.username[0]} </span> }
                     <label htmlFor="email">Email</label>
                     <input
                         type="email"
                         id="email"
-                        name="email"
+                        name="email"        
                         {...register('email')}
                     />
                     <span>{errors.email?.message}</span>

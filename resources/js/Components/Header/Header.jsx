@@ -39,7 +39,9 @@ const Header = () =>
                         </li>
                         {/* <li className="header__nav__contenedor-menu1__ul__li">Plataformas</li> */}
                         <li className="header__nav__contenedor-menu1__ul__li oculto-escritorio"> Desarrolladores</li>
-                        <li className="header__nav__contenedor-menu1__ul__li oculto-escritorio"> Contacto</li>
+                        <li className="header__nav__contenedor-menu1__ul__li oculto-escritorio">
+                            <a href="#contact">Contacto</a>
+                        </li>
                     </ul>
                 </div>
                 <div className="header__nav__contenedor-logo">
@@ -49,7 +51,7 @@ const Header = () =>
                 </div>
                 <ul className={`header__nav__ul menu2 ${showMenu ? 'activo' : ''} `}>
                     {/* <li className="header__nav__ul__li oculto-movil">Desarrolladores</li> */}
-                    <li className="header__nav__ul__li oculto-movil">Contacto</li>
+                    <li className="header__nav__ul__li oculto-movil"><a href="#contact">Contacto</a></li>
                     <li className="header__nav__ul__li">
                         <NavLink to={"/profile"}> {user ? 'Perfil' : 'Iniciar sesión' } </NavLink>
                     </li>

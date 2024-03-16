@@ -19,10 +19,9 @@ class CourseSeeder extends Seeder
             'category' => 'Backend',
             'location' => 'Youtube',
             'website' => 'https://www.youtube.com/watch?v=Kp4Mvapo5kc&list=PLNdFk2_brsRdgQXLIlKBXQDeRf3qvXVU_&ab_channel=MoureDevbyBraisMoure',
-            'rating' => 8.5,
+            'rating' => 4.5,
             'price' => 'Gratis',
             'cover_image' => 'imagen',
-            'questions' => json_encode(['¿Consideras este curso valioso en tiempo?', '¿Es de verdad que el curso es para principiantes?']),
             'author_id' => '56'
         ]);
     }

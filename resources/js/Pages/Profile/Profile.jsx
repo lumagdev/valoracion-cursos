@@ -1,6 +1,6 @@
 import {React, useEffect, useState } from 'react'
 import "./Profile.scss";
-import { redirect, useNavigate } from "react-router-dom";
+import { NavLink, redirect, useNavigate } from "react-router-dom";
 import useUserStore from '../../Store/useUserStore';
 import { RiLogoutBoxRLine, RiDeleteBin2Line, RiEdit2Fill} from "react-icons/ri";
 import { deleteUser } from '../../Services/User/deleteUser';
@@ -20,7 +20,8 @@ const Profile = () =>
 {
     let navigate = useNavigate();
     const logout = useUserStore((state) => state.logout);
-    const user = useUserStore((state) => state.user);
+    //const user = useUserStore((state) => state.user);
+    const {user} = useUserStore();
     const queryClient = useQueryClient();
     const {handleAlertMessage: successUpdateUserMessage, contextHolder: contextHolderUpdateUserSuccess} = useAlertMessage('success','El usuario ha sido actualizado con exito');
     const {handleAlertMessage: errorUpdateUserMessage, contextHolder: contextHolderUpdateUserError} = useAlertMessage('error','No se ha podido actualizar la tecnología');
@@ -65,6 +66,7 @@ const Profile = () =>
         mutationFn: deleteUser,
         onSuccess: () => {
             successDeleteUserMessage();
+            handleLogout();
         },
         onError: (e) => {
             console.log(e);
@@ -149,9 +151,11 @@ const Profile = () =>
                     </Popconfirm>
                     <button className='section-profile__profile-container__options-buttons__logout-button' onClick={handleLogout}>Cerrar sesión <RiLogoutBoxRLine /> </button>
                 </div>
+                {user?.role[0]==='common' ?
                 <div className='section-profile__profile-container__reviews-list'>
                     <h2 className='section-profile__profile-container__reviews-list__title'>Cursos valorados</h2>
-                    {dataReviewsByUser?.data.map(itemData => {
+                    {dataReviewsByUser || dataReviewsByUser?.data.lenght > 0 ? 
+                        dataReviewsByUser.data.map(itemData => {
                         let stars = StarsRating(itemData.user_rating);
                         return (
                         <div key={itemData.id} className='section-profile__profile-container__reviews-list__review-card'>
@@ -167,8 +171,11 @@ const Profile = () =>
                         </div>
                         )
                     })
-                    }
+                    : <p>Aun no tienes ninguna reseña</p>}
                 </div>
+                :
+                <div className='section-profile__profile-container__link-admin-container'> <NavLink to={"/admin"}>Ir a administración</NavLink> </div> 
+                }
             </div>
             <Modal isOpen={isOpenModalUpdateUser} title={'Editar usuario'} onClose={() => setIsOpenModalUpdateUser(false)} buttonNameSuccess={'Actualizar'} onSubmit={handleSubmitUpdateUser(onSubmitUpdateUser)}>
                 <form className='section-form'>

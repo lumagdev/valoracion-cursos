@@ -17,7 +17,9 @@ const Modal = ({isOpen, title, children, onClose, buttonNameSuccess, onSubmit}) 
                     </div>
                     <div className='section-modal__container-modal__footer'>
                         <button onClick={onClose}>Cancelar</button>
-                        <button onClick={onSubmit}> {buttonNameSuccess} </button>
+                        {buttonNameSuccess 
+                        ?   <button onClick={onSubmit}> {buttonNameSuccess} </button>
+                        :   <></>}
                     </div>
                 </div>
             </section>

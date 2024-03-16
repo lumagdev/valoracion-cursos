@@ -144,6 +144,16 @@
             }
 
         }
+        &__link-admin-container
+        {
+            & > a
+            {
+                font-family: $TEXT;
+                font-size: 25px;
+                font-weight: bold;
+                text-decoration: underline;
+            }
+        }
 
     }
     .section-form

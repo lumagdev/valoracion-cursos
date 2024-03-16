@@ -81,16 +81,7 @@ class UserController extends Controller
                 'min' => 'El campo :attribute debe tener al menos :min caracteres.',
             ];
     
-            try 
-            {
-                $this->validate($request, $validations, $validations_messages);
-            } catch (ValidationException $error) 
-            {
-                return response()->json([
-                    'message' => 'Check the fields, there is an error',
-                    'errors' => $error->errors()
-                ], 422); 
-            }
+            $this->validate($request, $validations, $validations_messages);
             
             $createdUser = User::create([
                 'name' => $request->name,
@@ -105,7 +96,15 @@ class UserController extends Controller
                 'message' => 'User created successfully'
             ], 201);
         
-        } catch(\Exception $e)
+        }
+        catch (ValidationException $error) 
+        {
+            return response()->json([
+                'message' => 'Check the fields, there is an error',
+                'errors' => $error->errors()
+            ], 422); 
+        } 
+        catch(\Exception $e)
         {
             return response()->json([
                 'message' => 'An error occurred while creating the user',
@@ -141,16 +140,7 @@ class UserController extends Controller
                 'min' => 'El campo :attribute debe tener al menos :min caracteres.',
             ];
 
-            try 
-            {
-                $this->validate($request, $validations, $validations_messages);
-            } catch (ValidationException $error) 
-            {
-                return response()->json([
-                    'message' => 'Check the fields, there is an error',
-                    'errors' => $error->errors()
-                ], 422); 
-            }
+            $this->validate($request, $validations, $validations_messages);
 
             $fieldsToUpdate = ['name','username','email','password'];
 
@@ -175,8 +165,15 @@ class UserController extends Controller
                 'data' => $updatedUser,
                 'message' => 'User updated successfully'
             ], 200);
-        
-        } catch(\Exception $e)
+        }
+        catch (ValidationException $error) 
+        {
+            return response()->json([
+                'message' => 'Check the fields, there is an error',
+                'errors' => $error->errors()
+            ], 422); 
+        } 
+        catch(\Exception $e)
         {
             return response()->json([
                 'message' => 'An error occurred while updating the user',

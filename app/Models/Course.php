@@ -12,10 +12,7 @@ class Course extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name','description','category','location','website','rating','price', 'cover_image','questions','author_id'];
-    protected $casts = [
-        'questions' => 'array'
-    ];
+    protected $fillable = ['name','description','category','location','website','rating','price','cover_image','author_id'];
 
     // Relation N:M with Courses
     public function users(): BelongsToMany
@@ -37,6 +34,11 @@ class Course extends Model
     public function authors(): BelongsTo
     {
         return $this->belongsTo(Author::class, 'author_id');
+    }
+
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
     }
 
     //Obtener los 3 mejores cursos

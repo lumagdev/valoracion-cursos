@@ -20,7 +20,7 @@ class TechnologySeeder extends Seeder
         DB::table('technologies')->insert([
             'id' => '78',
             'name' => 'Git',
-            'image' => '',
+            'image' => 'imagen git',
         ]);
     }
 }

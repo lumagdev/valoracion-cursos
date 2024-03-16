@@ -8,6 +8,8 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\AuthorSeeder;
 use Database\Seeders\CourseSeeder;
+use Database\Seeders\QuestionSeeder;
+use Database\Seeders\AnswerSeeder;
 use Database\Seeders\TechnologySeeder;
 use Database\Seeders\ReviewSeeder;
 use Database\Seeders\CourseTechnologySeeder;
@@ -26,7 +28,9 @@ class DatabaseSeeder extends Seeder
             AuthorSeeder::class,
             TechnologySeeder::class,
             CourseSeeder::class,
+            QuestionSeeder::class,
             ReviewSeeder::class,
+            AnswerSeeder::class,
             CourseTechnologySeeder::class,
         ]);
     }

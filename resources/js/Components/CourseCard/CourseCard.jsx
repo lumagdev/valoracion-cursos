@@ -15,7 +15,7 @@ const CourseCard = ({dataCourses, description, moreDetails, goWebsite}) =>
                     <div key={itemCourse.id} className='card-container'>
                         <div className='card-container__title-autor-score-row'>
                             <div className='card-container__title-autor-score-row__title-autor-container'>
-                                <p className='card-container__title-autor-score-row__title-autor-container__title'>Curso de Backend con Django</p>
+                                <p className='card-container__title-autor-score-row__title-autor-container__title'> {itemCourse.name} </p>
                                 <div className='card-container__title-autor-score-row__title-autor-container__autor-date-container'>
                                     <p>{itemCourse.authors.name}</p>
                                     <p> {itemCourse.created_at? itemCourse.created_at.split('-')[0] : ''} </p>
