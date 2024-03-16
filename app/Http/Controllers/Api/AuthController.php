@@ -18,6 +18,7 @@ class AuthController extends Controller
         {
             $validations = [
                 'name' => 'required|string|max:255',
+                'username' => 'required|string|max:50',
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required|string|min:8',
             ];
@@ -31,20 +32,11 @@ class AuthController extends Controller
                 'email' => 'El campo :attribute no tiene formato email.',
             ];
     
-            try 
-            {
-                $this->validate($request, $validations, $validations_messages);
-            } 
-            catch (ValidationException $error) 
-            {
-                return response()->json([
-                    'message' => 'Check the fields, there is an error',
-                    'errors' => $error->errors()
-                ], 422); 
-            }
-    
+            $this->validate($request, $validations, $validations_messages);
+        
             $user = User::create([
                 'name' => $request->name,
+                'username' => $request->username,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
             ]);
@@ -62,13 +54,19 @@ class AuthController extends Controller
                 'token_type' => 'Bearer',
                 'success' => true
             ], 201);
-
-        } catch (\Exception $error) 
+        } 
+        catch (ValidationException $error) 
+        {
+            return response()->json([
+                'message' => 'Check the fields, there is an error',
+                'errors' => $error->errors()
+            ], 422); 
+        }
+        catch (\Exception $error) 
         {
             Log::error('Error during registration: ' . $error->getMessage());
             return response()->json(['message' => 'Internal Server Error'], 500);
         }
-
     }
 
     public function login(Request $request)

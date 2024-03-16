@@ -204,6 +204,24 @@
                 padding: 10px;
                 border-radius: 5px;
             }
+            & > select
+            {
+                font-size: 20px;
+                font-family: $PARAGRAPH;
+                background-color: $CANTALOUPE;
+            }
+            & > div
+            {
+                margin-top: 12px;
+                display: flex;
+                flex-direction: row;
+                gap: 6px;
+                & > span
+                {
+                    font-size: 20px;
+                    & > button{margin-left: 3px;}
+                }
+            }
         }
         & > .div_double
         {

@@ -56,6 +56,11 @@
                 font-size: 20px;
             }
         }
+        &__message
+        {
+            font-size: 20px;
+            font-family: $TEXT;
+        }
         &__form
         {
             display: flex;
@@ -102,6 +107,37 @@
                     font-size: 15px;
                 }
             }
+            & > button
+            {
+                border: 0;
+                background-color: aliceblue;
+                font-size: 21px;
+                padding: 0.5em;
+                border-radius: 7px;
+                cursor: pointer;
+                transition: box-shadow 0.3s ease;
+                margin-top: 30px;
+
+                @include mobile
+                {
+                    font-size: 18px;
+                    margin-top: 20px;
+                }
+            }
+            & > button:hover
+            {
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+            }
+            & > span
+            {
+                font-size: 20px;
+                font-family: $TEXT;
+                @include mobile
+                {
+                    font-size: 16px;
+                }
+            }
+
         }
     }
 

@@ -30,9 +30,10 @@ const Admin = () =>
     const [isOpenModalNewTechnology, setIsOpenModalNewTechnology] = useState(false);
     const [isOpenModalUpdateCourse, setIsOpenModalUpdateCourse] = useState(false);
     const [isOpenModalUpdateTechnology, setIsOpenModalUpdateTechnology] = useState(false);
-    const [fileQuestionsContent, setFileQuestionsContent] = useState([]);
+    const [fileQuestionsContent, setFileQuestionsContent] = useState(null);
     const [fileCoverImage, setFileCoverImage] = useState(null);
     const [technologyImage, setTechnologyImage] = useState(null);
+    const [selectedTechnologiesOptions, setSelectedTechnologiesOptions] = useState(null);
     const {handleAlertMessage: successPostCourse, contextHolder: contextHolderPostCourseSuccess} = useAlertMessage('success','El curso ha sido creado con exito');
     const {handleAlertMessage: successUpdateCourse , contextHolder: contextHolderUpdateCourseSuccess} = useAlertMessage('success','El curso ha sido editado con exito');
     const {handleAlertMessage: errorPostCourse, contextHolder: contextHolderPostCourseError} = useAlertMessage('error','No se ha podido crear el curso');
@@ -83,13 +84,6 @@ const Admin = () =>
         });
     };
 
-    const handleCoverImage = (event) =>
-    {
-        const file = event.target.files[0];
-        setFileCoverImage(file);
-        console.log(file);
-    } 
-
     const handleQuestionFile = async (event) =>
     {
         let file = event.target.files[0];
@@ -99,13 +93,37 @@ const Admin = () =>
                 const content = await readFile(file);
                 const lines = content.split(/\r?\n/);
                 const nonEmptyLines = lines.filter(line => line.trim() !== '');
-                setFileQuestionsContent(nonEmptyLines);
+
+                const questionsArray = nonEmptyLines.map(line => {
+                    return {"content": line};
+                });
+                setFileQuestionsContent(questionsArray);
+
             } catch (error) 
             {
               console.error('Error al leer el archivo:', error);
             }
         }
     }
+
+    const handleCoverImage = (event) =>
+    {
+        const file = event.target.files[0];
+        setFileCoverImage(file);
+        console.log(file);
+    }
+
+    const handleSelecTechnologies = (event) => {
+        const selectedValues = Array.from(event.target.selectedOptions, option => option.value);
+        setSelectedTechnologiesOptions(selectedValues);
+
+        //console.log(selectedValues);
+    };
+
+    const removeOption = (optionToRemove) => {
+        const updatedOptions = selectedTechnologiesOptions.filter(option => option !== optionToRemove);
+        setSelectedTechnologiesOptions(updatedOptions);
+    };
 
     //tantstackquery para postCourses
     const schema = yup.object({
@@ -131,6 +149,7 @@ const Admin = () =>
             // Limpiando los setters
             setTechnologyImage(null);
             setFileQuestionsContent(null);
+            setSelectedTechnologiesOptions(null);
         },
         onError: (e) => {
             console.log(e);
@@ -149,7 +168,9 @@ const Admin = () =>
             price: dataForm.price,
             cover_image: fileCoverImage,
             author_id: dataForm.author,
-            questions: fileQuestionsContent
+            questions: fileQuestionsContent,
+            technologies: selectedTechnologiesOptions,
+            rating: 0
         })
     };
 
@@ -204,7 +225,8 @@ const Admin = () =>
                 price: dataForm.price,
                 cover_image: fileCoverImage,
                 author_id: dataForm.author,
-                questions: fileQuestionsContent
+                questions: fileQuestionsContent,
+                technologies: selectedTechnologiesOptions
             }
         })
     };
@@ -562,6 +584,33 @@ const Admin = () =>
                         {!fileQuestionsContent || fileQuestionsContent.length === 0 && <span> El campo preguntas es obligatorio </span> }
                         {errorPost?.response.data.errors && errorPost.response.data.errors.questions && errorPost.response.data.errors.questions[0] && <span> {errorPost.response.data.errors.questions[0]} </span> }
                     </div>
+                    <div>
+                        <label htmlFor="technologies">Tecnologías:</label>
+                        <select 
+                            name="technologies" 
+                            id="technologies"
+                            multiple 
+                            value={selectedTechnologiesOptions}
+                            onChange={handleSelecTechnologies}
+                        >
+                            <option value="">--Seleccione tecnologías--</option>
+                            {dataTechnologies?.data?.map(itemTechnology => (
+                                <option key={itemTechnology.id} value={itemTechnology.id}> {itemTechnology.id} {itemTechnology.name} </option>
+                            ))}
+                        </select>
+                        <div>
+                            {selectedTechnologiesOptions ?
+                                selectedTechnologiesOptions.map(itemOption => (
+                                    <span key={itemOption}>
+                                        {itemOption}
+                                        <button onClick={() => removeOption(itemOption)}>X</button>
+                                    </span>
+                                ))
+                            : <></>}
+                        </div>
+                        {/* {!filetechnologiesContent || filetechnologiesContent.length === 0 && <span> El campo preguntas es obligatorio </span> } */}
+                        {errorPost?.response.data.errors && errorPost.response.data.errors.technologies && errorPost.response.data.errors.technologies[0] && <span> {errorPost.response.data.errors.technologies[0]} </span> }
+                    </div>
                 </form>
             </Modal>
             <Modal isOpen={isOpenModalUpdateCourse} title={'Editar curso'} onClose={() => setIsOpenModalUpdateCourse(false)} buttonNameSuccess={'Actualizar'} onSubmit={handleSubmitUpdateCourse(onSubmitUpdateCourse)}>
@@ -664,6 +713,33 @@ const Admin = () =>
                             onChange={handleQuestionFile}
                         />
                         {errorPutCourse?.response.data.errors && errorPutCourse.response.data.errors.questions && errorPutCourse.response.data.errors.questions[0] && <span> {errorPutCourse.response.data.errors.questions[0]} </span> }
+                    </div>
+                    <div>
+                        <label htmlFor="technologies">Tecnologías:</label>
+                        <select 
+                            name="technologies" 
+                            id="technologies"
+                            multiple 
+                            value={selectedTechnologiesOptions}
+                            onChange={handleSelecTechnologies}
+                        >
+                            <option value="">--Seleccione tecnologías--</option>
+                            {dataTechnologies?.data?.map(itemTechnology => (
+                                <option key={itemTechnology.id} value={itemTechnology.id}> {itemTechnology.id} {itemTechnology.name} </option>
+                            ))}
+                        </select>
+                        <div>
+                            {selectedTechnologiesOptions ?
+                                selectedTechnologiesOptions.map(itemOption => (
+                                    <span key={itemOption}>
+                                        {itemOption}
+                                        <button onClick={() => removeOption(itemOption)}>X</button>
+                                    </span>
+                                ))
+                            : <></>}
+                        </div>
+                        {/* {!filetechnologiesContent || filetechnologiesContent.length === 0 && <span> El campo preguntas es obligatorio </span> } */}
+                        {errorPutCourse?.response.data.errors && errorPutCourse.response.data.errors.technologies && errorPutCourse.response.data.errors.technologies[0] && <span> {errorPutCourse.response.data.errors.technologies[0]} </span> }
                     </div>
                 </form>
             </Modal>

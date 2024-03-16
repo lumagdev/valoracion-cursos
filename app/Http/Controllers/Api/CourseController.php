@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use App\Models\Question;
 class CourseController extends Controller
 {
     public function getAllCourses()
@@ -43,7 +44,7 @@ class CourseController extends Controller
     {
         try
         {
-            $courseById = Course::with(['authors','technologies','reviews'])->find($id);
+            $courseById = Course::with(['authors','technologies','reviews','questions'])->find($id);
 
             if (!isset($courseById)) 
             {
@@ -80,7 +81,11 @@ class CourseController extends Controller
                 'cover_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'questions' => 'required|array',
                 'author_id' => 'required',
-                //Dato solo enviado por front, no se guarda en Course
+                //Datos solo enviados por front, no se guarda en Course
+                //questions:[{"content":"pregunta},{}]
+                'questions' => 'required|array',
+                'questions.*.content' => 'required|string',
+                //technologies:[id]
                 'technologies' => 'required|array',
                 'technologies.*' => [
                     'required',
@@ -95,22 +100,14 @@ class CourseController extends Controller
                 'mimes' => 'El campo :attribute debe ser una imagen en formato JPEG, PNG, JPG o GIF.',
                 'max' => 'El campo :attribute no debe ser mayor de 2 MB.',
                 'array' => 'El campo :attribute debe ser un array',
+                'questions.required' => 'El campo :attribute es obligatorio',
                 'technologies.required' => 'Debe seleccionar al menos una tecnología.',
                 'technologies.*.required' => 'El campo tecnología es obligatorio.',
                 'technologies.*.exists' => 'Una o más tecnologías seleccionadas no existen en la base de datos.',
             ];
         
-            try 
-            {
-                $this->validate($request, $validations, $validations_messages);
-            } catch (ValidationException $error) 
-            {
-                return response()->json([
-                    'message' => 'Check the fields, there is an error',
-                    'errors' => $error->errors()
-                ], 422); 
-            }
-
+            $this->validate($request, $validations, $validations_messages);
+            
             if ($request->hasFile('cover_image')) 
             {
                 //$imagePath = $request->file('cover_image')->store('/courses', 'images');
@@ -131,7 +128,6 @@ class CourseController extends Controller
             $createdCourse->rating = $request->input('rating');
             $createdCourse->price = $request->input('price');
             $createdCourse->cover_image = $imagePath;
-            $createdCourse->questions = $request->input('questions');
             $createdCourse->author_id = $request->input('author_id');
             
             $createdCourse->save();
@@ -140,11 +136,25 @@ class CourseController extends Controller
             $technologies = $request->input('technologies');
             $createdCourse->technologies()->attach($technologies);
 
+            // Asignamos preguntas al curso
+            foreach ($request->questions as $question) 
+            {
+                $questionData = new Question(['content' => $question['content']]);
+                $createdCourse->questions()->save($questionData); 
+            }
+
             return response()->json([
                 'success' => true,
                 'data' => $createdCourse,
                 'message' => 'Course created successfully'
             ], 201);
+        }
+        catch (ValidationException $error) 
+        {
+            return response()->json([
+                'message' => 'Check the fields, there is an error',
+                'errors' => $error->errors()
+            ], 422); 
         }
         catch(\Exception $error)
         {
@@ -178,7 +188,9 @@ class CourseController extends Controller
                 'cover_image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
                 'questions' => 'string|array',
                 'author_id' => 'numeric',
-                'technologies' => 'required|array',
+                'questions'=> 'array',
+                'questions.*.content' => 'string',
+                'technologies' => 'array',
                 'technologies.*' => [
                     'required',
                     Rule::exists('technologies', 'id'), // Verifica que las tecnologías existan en la base de datos
@@ -192,20 +204,11 @@ class CourseController extends Controller
                 'mimes' => 'El campo :attribute debe ser una imagen en formato JPEG, PNG, JPG o GIF.',
                 'max' => 'El campo :attribute no debe ser mayor de 2 MB.',
                 'array' => 'El campo :attribute debe ser un array',
-                'technologies.*.required' => 'El campo tecnología es obligatorio.',
-                'technologies.*.exists' => 'Una o más tecnologías seleccionadas no existen en la base de datos.',
+                'questions.array' => 'El campo :attribute debe ser una array.',
+                'technologies.array' => 'El campo :attribute debe ser una array.',
             ];
         
-            try 
-            {
-                $this->validate($request, $validations, $validations_messages);
-            } catch (ValidationException $error) 
-            {
-                return response()->json([
-                    'message' => 'Check the fields, there is an error',
-                    'errors' => $error->errors()
-                ], 422); 
-            }
+            $this->validate($request, $validations, $validations_messages);
         
             if ($request->hasFile('cover_image')) 
             {
@@ -219,7 +222,7 @@ class CourseController extends Controller
                 $updatedCourse->cover_image = $imagePath;
             }
     
-            $fieldsToUpdate = ['name', 'description', 'category', 'location', 'website', 'rating', 'price', 'questions', 'author_id'];
+            $fieldsToUpdate = ['name', 'description', 'category', 'location', 'website', 'rating', 'price', 'author_id'];
 
             foreach ($fieldsToUpdate as $field)
             {
@@ -231,19 +234,35 @@ class CourseController extends Controller
     
             $updatedCourse->save();
 
-            // Asignamos tecnologías al curso
+            // Asignamos tecnologías al curso si se pasan
             if ($request->has('technologies')) {
                 $technologies = $request->input('technologies');
                 $updatedCourse->technologies()->sync($technologies);
             }
 
+            // Asignamos preguntas al curso si se pasan
+            if(!empty($request->question)) {
+                foreach ($request->questions as $question) 
+                {
+                    $questionData = Question::findOrFail($question['id']);
+                    $questionData->update(['content' => $question['content']]);
+                }
+            }
     
             return response()->json([
                 'success' => true,
                 'data' => $updatedCourse,
                 'message' => 'Course updated successfully'
             ], 201);
-        } catch (\Exception $error) 
+        }
+        catch (ValidationException $error) 
+        {
+            return response()->json([
+                'message' => 'Check the fields, there is an error',
+                'errors' => $error->errors()
+            ], 422); 
+        } 
+        catch (\Exception $error) 
         {
             return response()->json([
                 'message' => 'An error occurred while updating the course',
@@ -339,4 +358,5 @@ class CourseController extends Controller
             ], 500);
         }
     }
+
 }
