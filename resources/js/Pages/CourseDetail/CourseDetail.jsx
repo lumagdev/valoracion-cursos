@@ -81,12 +81,12 @@ const CourseDetail = () =>
     return (
         <section className='course-detail'>
             <section className='course-detail__course-card'>
-                <CourseCard dataCourses={dataCourse} descripcion={true} moreDetails={false} goWebsite={true}/>
+                <CourseCard dataCourses={dataCourse?.data} descripcion={true} moreDetails={false} goWebsite={true}/>
             </section>
             <section className='course-detail__reviews'>
                 <div className='course-detail__reviews__allReviews'>
                     <div className='course-detail__reviews__allReviews__buttons'>
-                        <button className='course-detail__reviews__allReviews__buttons__filter'>Filtros <BsFilter/> </button>
+                        {/* <button className='course-detail__reviews__allReviews__buttons__filter'>Filtros <BsFilter/> </button> */}
                         <NavLink className='course-detail__reviews__allReviews__buttons__add' to={`/create-update-review/${id}`} >
                             {editActivated ? <>Editar reseña <MdModeEditOutline/></> : <>Añadir reseña <MdPlaylistAdd/></> }
                         </NavLink>

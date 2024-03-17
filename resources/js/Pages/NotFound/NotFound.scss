@@ -1,0 +1,86 @@
+@use "../../Styles/" as *;
+.section-notFound 
+{
+    padding: 150px 0px 50px 0px;
+    &__container-notFound {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        gap: 2em;
+
+        &__text {
+            color: black;
+            font-size: 30px;
+            font-family: $TITLES;
+            @include mobile
+            {
+                font-size: 20px;
+            }
+        }
+
+        &__number-container {
+            font-size: 120px;
+            color: black;
+            display: flex;
+
+            & > span {
+                display: inline-block;
+            }
+
+            & > span:nth-child(1) {
+                animation: move4 1.5s cubic-bezier(0.5, 0, 0.5, 1) infinite, changeColor 4s infinite;
+            }
+
+            & > span:nth-child(2) {
+                animation: move0 1.5s cubic-bezier(0.5, 0, 0.5, 1) infinite, changeColor 4s infinite;
+            }
+
+            & > span:nth-child(3) {
+                animation: move4_2 1.5s cubic-bezier(0.5, 0, 0.5, 1) infinite, changeColor 4s infinite;
+            }
+
+            & > span:nth-child(1),
+            & > span:nth-child(3) {
+                animation-delay: 0.5s;
+            }
+        }
+    }
+}
+
+@keyframes move4 {
+    0% {
+        transform: translateY(-40px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes move0 {
+    0% {
+        transform: translateY(-20px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes move4_2 {
+    0% {
+        transform: translateY(7px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes changeColor {
+    0%, 100% {
+        color: #0ABAC2;
+    }
+    50% {
+        color: #F9C291;
+    }
+}

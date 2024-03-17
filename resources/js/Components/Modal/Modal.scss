@@ -26,6 +26,10 @@
         &__header
         {
             padding: 30px 40px;
+            @include mobile
+            {
+                padding: 20px 12px;
+            }
             &__title
             {
                 margin: 0;
@@ -57,9 +61,11 @@
                 padding: 14px 52px;
                 font-size: 24px;
                 cursor: pointer;
+                border-radius: 7px;
                 @include mobile {
                     font-size: 16px;
                     padding: 10px 15px;
+                    border-radius: 5px;
                 }
             }
             & > button:nth-child(1)

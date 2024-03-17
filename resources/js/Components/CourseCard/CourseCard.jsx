@@ -8,7 +8,7 @@ const CourseCard = ({dataCourses, description, moreDetails, goWebsite}) =>
     if(dataCourses) {
         return ( 
         <>
-            {dataCourses?.data?.map(itemCourse =>
+            {dataCourses?.map(itemCourse =>
             {
                 let stars = StarsRating(itemCourse.rating);
                 return (
@@ -27,7 +27,7 @@ const CourseCard = ({dataCourses, description, moreDetails, goWebsite}) =>
                                 </div>
                                 <div className='card-container__title-autor-score-row__score-container__opinions-score-container'>
                                     <p> {itemCourse.rating} </p>
-                                    <p>(10 opiniones)</p>
+                                    {/* <p>(10 opiniones)</p> */}
                                 </div>
                             </div>
                         </div>
