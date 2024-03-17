@@ -11,19 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reviews', function (Blueprint $table) {
-            $table->id('id');
-            $table->double('user_rating');
-            $table->string('comment');
-            $table->json('answers')->nullable();
-            $table->json('questionnaire')->nullable();
+        Schema::create('questions', function (Blueprint $table) {
+            $table->id();
+            $table->string('content', 300);
 
             $table->timestamps();
         });
 
-        Schema::table('reviews', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        Schema::table('questions', function (Blueprint $table) {
             $table->unsignedBigInteger('course_id')->unsigned();
             $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
         });
@@ -34,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reviews');
+        Schema::dropIfExists('questions');
     }
 };

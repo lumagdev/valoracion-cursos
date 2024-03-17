@@ -4,9 +4,10 @@ import routes from "./Routes/routes";
 import useUserStore from "./Store/useUserStore";
 import { VerifyLogin } from "./Components/VerifyLogin/VerifyLogin";
 import Profile from "./Pages/Profile/Profile";
+import Admin from "./Pages/Admin/Admin";
+import Review from "./Pages/Review/Review";
 import Header from "./Components/Header/Header";
 import Footer from "./Components/Footer/Footer";
-import Admin from "./Pages/Admin/Admin";
 import { OnlyAdmin } from "./Components/OnlyAdmin/OnlyAdmin";
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
 					}
 					<Route element={ <VerifyLogin isAuth={isAuth} /> }>
 						<Route path="/profile" element={<Profile/>} />
+						<Route path="/create-update-review/:id" element={<Review/>} />
 					</Route>
 					<Route element={ <OnlyAdmin user={user} />}>
 						<Route path="/admin" element={<Admin/>} />

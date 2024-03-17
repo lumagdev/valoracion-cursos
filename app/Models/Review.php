@@ -11,19 +11,20 @@ class Review extends Model
 
     protected $table = 'reviews';
     public $timestamps = true;
-    protected $fillable = ['user_rating','comment','answers','questionnaire','user_id', 'course_id'];
-    protected $casts = [
-        'answers' => 'array',
-        'questionnaire' => 'array'
-    ];
+    protected $fillable = ['user_rating','title','comment','user_id','course_id'];
 
-    public function users()
+    public function user()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsTo(User::class);
     }
 
-    public function courses()
+    public function course()
     {
-        return $this->belongsToMany(Course::class);
+        return $this->belongsTo(Course::class);
+    }
+
+    public function answers()
+    {
+        return $this->hasMany(Answer::class);
     }
 }

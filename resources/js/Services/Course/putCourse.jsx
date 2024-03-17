@@ -3,7 +3,7 @@ import useUserStore from "../../Store/useUserStore";
 
 export const putCourse = async ({courseData, id}) => 
 {
-    //console.log('DENTRO',courseData);
+    console.log('DENTRO',courseData);
     const token = useUserStore.getState().token;
     const headers = {
         'Authorization': `Bearer ${token}`,

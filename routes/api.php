@@ -8,6 +8,9 @@ use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\TechnologyController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\CourseController;
+use App\Http\Controllers\Api\QuestionController;
+use App\Http\Controllers\Api\AnswerController;
+use App\Http\Controllers\ContactController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,9 +39,19 @@ Route::get('/courses/count-reviews/{id}', [CourseController::class, 'getCourseRe
 Route::get('/technologies', [TechnologyController::class, 'getAllTechnologies'])->name('technologies.allTechnologies');
 Route::get('/technologies/{id}', [TechnologyController::class, 'getTechnologyById'])->name('technologies.technologyById');
 
+//Review
+Route::get('/reviews/reviews-by-course/{id}', [ReviewController::class, 'getAllReviewsOfACourse'])->name('reviews.allReviewsOfACourse');
+
 //Author
 Route::get('/authors/top-authors', [AuthorController::class, 'getTopHighestAuthors'])->name('authors.topAuthors');
-// Rutas que requieren autenticacion.
+
+//Question
+Route::get('/questions/questions-by-course/{id}', [QuestionController::class, 'getQuestionsOfACourse'])->name('questions.questionsByCourse');
+
+// Contact
+Route::post('/contact', [ContactController::class, 'sendContactForm'])->name('contact.sendContact');
+
+// --------------------------RUTAS QUE REQUIEREN AUTENTICACIÓN.
 Route::middleware(['auth:sanctum'])->group(function ()
 {
     Route::get('logout', [AuthController::class, 'logout']);
@@ -50,10 +63,8 @@ Route::middleware(['auth:sanctum'])->group(function ()
 
         // User
         Route::get('/users', [UserController::class, 'getAllUsers'])->name('users.allUsers');
-        Route::get('/users/{id}', [UserController::class, 'getUserById'])->name('users.userById');
         Route::post('/users/create', [UserController::class, 'createUser'])->name('users.createUser');
         //Route::put('/users/update/{id}', [UserController::class, 'updateUser'])->name('users.updateUser');
-        Route::delete('/users/delete/{id}', [UserController::class, 'deleteUser'])->name('users.deleteUser');
         
         // Author
         Route::post('/authors/create', [AuthorController::class, 'createAuthor'])->name('authors.createAuthor');
@@ -74,16 +85,34 @@ Route::middleware(['auth:sanctum'])->group(function ()
         Route::post('/courses/create', [CourseController::class, 'createCourse'])->name('courses.createCourse');
         Route::match(['post','put'],'/courses/update/{id}', [CourseController::class, 'updateCourse'])->name('courses.updateCourse');
         Route::delete('/courses/delete/{id}', [CourseController::class, 'deleteCourse'])->name('courses.deleteCourse');
+
+        // Question
+        Route::get('/questions', [QuestionController::class, 'getAllQuestions'])->name('questions.allQuestions');
+        Route::post('/questions/create', [QuestionController::class, 'createQuestion'])->name('questions.createQuestion');
+        Route::get('/questions/{id}', [QuestionController::class, 'getQuestionById'])->name('questions.questionById');
+        Route::put('/questions/update/{id}', [QuestionController::class, 'updateQuestion'])->name('questions.updateQuestion');
+        Route::delete('/questions/delete/{id}', [QuestionController::class, 'deleteQuestion'])->name('questions.deleteQuestion');
+
+        // Answer
+        Route::get('/answers', [AnswerController::class, 'getAllAnswers'])->name('answers.allAnswers');
+        Route::post('/answers/create', [AnswerController::class, 'createAnswer'])->name('answers.createAnswer');
+        Route::get('/answers/{id}', [AnswerController::class, 'getAnswerById'])->name('answers.answerById');
+        Route::put('/answers/update/{id}', [AnswerController::class, 'updateAnswer'])->name('answers.updateAnswer');
+        Route::delete('/answers/delete/{id}', [AnswerController::class, 'deleteAnswer'])->name('answers.deleteAnswer');
     });
 
-    /* ------------------- Rutas específicas para el rol de 'common'------------ */
+    /* ---------------------------------- RUTAS ESPECÍFICAS PARA EL ROL "COMMON"----------------------------- */
     Route::group(['middleware' => ['role:common']], function () {
-        
         // Users
         Route::put('/users/update/{id}', [UserController::class, 'updateUser'])->name('users.updateUser');
+        // Reviews
+        Route::get('/reviews/course/{courseId}/user/{userId}/questions-answers', [ReviewController::class, 'getQuestionsAndAnswersForUserReview'])->name('reviews.questionsAndAnswersForUserReview');
     });
 
-    /*----------------- RUTAS EN COMÚN---------------------------------------- */
+    /*--------------------------------- RUTAS EN COMÚN---------------------------------------- */
+    Route::get('/users/{id}', [UserController::class, 'getUserById'])->name('users.userById');
+    Route::delete('/users/delete/{id}', [UserController::class, 'deleteUser'])->name('users.deleteUser');
+
     // Author
     Route::get('/authors', [AuthorController::class, 'getAllAuthors'])->name('authors.allAuthors');
 
@@ -91,4 +120,5 @@ Route::middleware(['auth:sanctum'])->group(function ()
     Route::post('/reviews/create', [ReviewController::class, 'createReview'])->name('reviews.createReview');
     Route::put('/reviews/update/{id}', [ReviewController::class, 'updateReview'])->name('reviews.updateReview');
     Route::delete('/reviews/delete/{id}', [ReviewController::class, 'deleteReview'])->name('reviews.deleteReview');
+    Route::get('/reviews/reviews-by-user/{id}', [ReviewController::class, 'getAllReviewsOfAUser'])->name('reviews.allReviewsOfAUser');
 });

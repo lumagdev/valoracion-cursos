@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('authors', function (Blueprint $table) {
             $table->id('id');
-            $table->string('name');
-            $table->string('website');
+            $table->string('name', 100);
+            $table->string('website', 1000);
             $table->double('author_rating');
-            $table->string('photo');
+            $table->string('photo', 500);
             $table->timestamps();
         });
     }

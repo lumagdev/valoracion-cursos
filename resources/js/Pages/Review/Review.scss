@@ -1,0 +1,223 @@
+@use "../../Styles/" as *;
+
+.section-create-update-review
+{
+    padding: 175px 0px 50px 0px;
+    display: flex;
+    justify-content: center;
+    @include mobile {
+        padding: 120px 0px 50px 0px;
+    }
+    &__div-container
+    {
+        width: 72%;
+        border: 5px solid $TURQUOISE;
+        padding: 3em;
+        display: flex;
+        flex-direction: column;
+        gap: 3.5em;
+        @include mobile {
+            border: 0;
+            width: 85%;
+            padding-top: 0;
+        }
+        &__title
+        {
+            margin: 0;
+            font-size: 38px;
+            font-family: $TITLES;
+            text-align: center;
+            @include mobile {
+                font-size: 28px;
+            }
+        }
+        
+        &__message
+        {
+            font-size: 30px;
+            font-family: $PARAGRAPH;
+            background-color: $TURQUOISE;
+            padding: 1em;
+            text-align: justify;
+            border-radius: 7px;
+            @include mobile {
+                font-size: 20px;
+            }
+        }
+        
+        &__form
+        {
+            display: flex;
+            flex-direction: column;
+            gap: 2em;
+            &__comment-container
+            {
+                display: flex;
+                flex-direction: column;
+                gap: 0.4em;
+                & > label
+                {
+                    font-size: 22px;
+                    font-family: $TEXT;
+                    @include mobile {
+                        font-size: 17px;
+                    }
+                }
+                & > textarea
+                {
+                    background-color: $CANTALOUPE;
+                    font-size: 18px;
+                    font-family: $PARAGRAPH;
+                    padding: 10px;
+                    border: 0;
+                    border-radius: 5px;
+                }
+            }
+
+            &__title-container
+            {
+                display: flex;
+                flex-direction: column;
+                gap: 0.4em;
+                & > label
+                {
+                    font-size: 22px;
+                    font-family: $TEXT;
+                    @include mobile {
+                        font-size: 17px;
+                    }
+                }
+                & > input
+                {
+                    font-size: 18px;
+                    border-bottom: 3px solid $CANTALOUPE;
+                    @include mobile {
+                        font-size: 16px;
+                    }
+                }
+            }
+    
+            &__questionnaire-title
+            {
+                font-size: 24px;
+                font-weight: bold;
+                font-family: $TITLES;
+                @include mobile {
+                    font-size: 20px;
+                }
+            }
+    
+            &__questions-list-container
+            {
+                background-color: $CANTALOUPE;
+                border-radius: 7px;
+                padding: 1.2em;
+                display: flex;
+                flex-direction: column;
+                gap: 1em;
+                &__question-answer
+                {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.3em;
+                    & > label
+                    {
+                        font-size: 22px;
+                        font-family: $TEXT;
+                        @include mobile {
+                            font-size: 17px;
+                        }
+                    }
+                    & > textarea
+                    {
+                        font-size: 18px;
+                        font-family: $PARAGRAPH;
+                        padding: 10px;
+                        border-radius: 5px;
+                        @include mobile {
+                            font-size: 16px;
+                        }
+                    }
+                }
+            }
+            &__raiting-container
+            {
+                display: flex;
+                justify-content: space-between;
+                & > label
+                {
+                    font-size: 22px;
+                    font-family: $TEXT;
+                    @include mobile {
+                        font-size: 16px;
+                    }
+                }
+                & > input
+                {
+                    font-size: 18px;
+                    border-bottom: 1px solid;
+                    width: 5%;
+                    @include mobile {
+                        font-size: 16px;
+                        width: 10%;
+                    }
+                }
+                & > input::placeholder
+                {
+                    text-align: end;
+                    font-size: 18px;
+                    @include mobile {
+                        font-size: 16px;
+                    }
+                }
+            }
+        }
+    
+        &__buttons
+        {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            gap: 2em;
+
+            & > button
+            {
+                border: 0;
+                background-color: $TURQUOISE;
+                font-size: 25px;
+                font-family: $TEXT;
+                font-weight: bold;
+                padding: 0.5em 1em;
+                width: 20%;
+                border-radius: 7px;
+                cursor: pointer;
+                transition: box-shadow 0.3s ease;
+                @include mobile {
+                    width: 50%;
+                    font-size: 18px;
+                    //text-indent: -9999px;
+                }
+            }
+
+            & > a
+            {
+                text-align: center;
+                color: red;
+                background-color: $TURQUOISE;
+                font-size: 25px;
+                font-family: $TEXT;
+                font-weight: bold;
+                padding: 0.5em 0em;
+                width: 20%;
+                border-radius: 7px;
+                cursor: pointer;
+                transition: box-shadow 0.3s ease;
+            }
+            & > button:hover, & > a:hover
+            {
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+            }
+
+        }
+    }
+}

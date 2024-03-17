@@ -54,7 +54,10 @@ class ReviewObserver
         $course = Course::find($course_id);
         if ($course) 
         {
-            $course->rating = Review::where('course_id', $course_id)->avg('user_rating');
+            $average_rating = Review::where('course_id', $course_id)->avg('user_rating');
+            // Redondeamos para q solo sea con una parte decimal
+            $rounded_rating = round($average_rating, 1);
+            $course->rating = $rounded_rating;
             $course->save();
         }
     }

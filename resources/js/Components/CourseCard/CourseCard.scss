@@ -83,7 +83,7 @@
             {
                 & > svg
                 {
-                    font-size: 25px;
+                    font-size: 30px;
                     color: $TURQUOISE;
                     @include mobile
                     {
@@ -133,9 +133,9 @@
         &__coverImage-container
         {
             width: 86%;
-            height: 417px;
+            height: 550px;
             overflow: hidden;
-            cursor: pointer;
+            //cursor: pointer;
             border-radius: 10px;
             @include mobile
             {
@@ -161,8 +161,8 @@
             }
             &__tagImage-container
             {
-                width: 8%;
-                height: 46px;
+                width: 47px;
+                height: 47px;
                 overflow: hidden;
                 cursor: pointer;
                 border-radius: 10px;
@@ -244,6 +244,16 @@
                 font-size: 25px;
                 font-family: $TITLES;
                 text-decoration: underline;
+
+                &.--oculto
+                {
+                    display: none;
+                }
+                &.--muestra
+                {
+                    display: block;
+                }
+
                 @include mobile
                 {
                     font-size: 18px;

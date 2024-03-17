@@ -14,10 +14,9 @@ class ReviewSeeder extends Seeder
     {
         DB::table('reviews')->insert([
             'id' => '10',
-            'user_rating' => 9.2,
+            'user_rating' => 4.2,
+            'title' => 'Un curso que lo vale',
             'comment' => 'Diría que es de los mejores cursos desde 0 que he encontrado y encima gratis.',
-            'answers' => json_encode(['Si','Lo considero para principiantes']),
-            'questionnaire' => json_encode(['Pregunta' => 'Respuesta']),
             'user_id' => '84',
             'course_id' => '34',
         ]);

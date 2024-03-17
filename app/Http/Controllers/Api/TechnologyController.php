@@ -72,17 +72,8 @@ class TechnologyController extends Controller
                 'max' => 'El campo :attribute no debe ser mayor de 2 MB.'
             ];
         
-            try 
-            {
-                $this->validate($request, $validations, $validations_messages);
-            } catch (ValidationException $error) 
-            {
-                return response()->json([
-                    'message' => 'Check the fields, there is an error',
-                    'errors' => $error->errors()
-                ], 422); 
-            }
-
+            $this->validate($request, $validations, $validations_messages);
+            
             if ($request->hasFile('image')) 
             {
                 $image = $request->file('image');
@@ -102,6 +93,13 @@ class TechnologyController extends Controller
                 'data' => $createdTechnology,
                 'message' => 'Technology created successfully'
             ], 201);
+        }
+        catch (ValidationException $error) 
+        {
+            return response()->json([
+                'message' => 'Check the fields, there is an error',
+                'errors' => $error->errors()
+            ], 422); 
         }
         catch(\Exception $error)
         {
@@ -136,16 +134,7 @@ class TechnologyController extends Controller
                 'max' => 'El campo :attribute no debe ser mayor de 2 MB.'
             ];
         
-            try 
-            {
-                $this->validate($request, $validations, $validations_messages);
-            } catch (ValidationException $error) 
-            {
-                return response()->json([
-                    'message' => 'Check the fields, there is an error',
-                    'errors' => $error->errors()
-                ], 422); 
-            }
+            $this->validate($request, $validations, $validations_messages);
         
             if ($request->hasFile('image')) 
             {
@@ -174,6 +163,13 @@ class TechnologyController extends Controller
                 'data' => $updatedTechnology,
                 'message' => 'Technology updated successfully'
             ], 201);
+        }
+        catch (ValidationException $error) 
+        {
+            return response()->json([
+                'message' => 'Check the fields, there is an error',
+                'errors' => $error->errors()
+            ], 422); 
         }
         catch(\Exception $error)
         {

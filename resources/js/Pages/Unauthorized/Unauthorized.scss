@@ -1,0 +1,19 @@
+@use "../../Styles/" as *;
+
+.section__unauthorized
+{
+    padding: 150px 0px 80px 0px;
+    display: flex;
+    justify-content: center;
+    &__text
+    {
+        font-size: 40px;
+        font-family: $TITLES;
+        @include mobile
+        {
+            font-size: 25px;
+            width: 80%;
+            text-align: center;
+        }
+    }
+}

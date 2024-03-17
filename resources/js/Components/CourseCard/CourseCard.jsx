@@ -1,23 +1,21 @@
 import React from 'react'
 import { NavLink } from "react-router-dom";
 import "./CourseCard.scss";
-import imagencurso from "../../Assets/curso-brais-python.jpg";
-import logo from "../../Assets/logo-python.png";
 import StarsRating from '../StarsRating';
 
-const CourseCard = ({dataCourses, description}) => 
+const CourseCard = ({dataCourses, description, moreDetails, goWebsite}) => 
 {
     if(dataCourses) {
         return ( 
         <>
-            {dataCourses?.data?.map(itemCourse =>
+            {dataCourses?.map(itemCourse =>
             {
                 let stars = StarsRating(itemCourse.rating);
                 return (
                     <div key={itemCourse.id} className='card-container'>
                         <div className='card-container__title-autor-score-row'>
                             <div className='card-container__title-autor-score-row__title-autor-container'>
-                                <p className='card-container__title-autor-score-row__title-autor-container__title'>Curso de Backend con Django</p>
+                                <p className='card-container__title-autor-score-row__title-autor-container__title'> {itemCourse.name} </p>
                                 <div className='card-container__title-autor-score-row__title-autor-container__autor-date-container'>
                                     <p>{itemCourse.authors.name}</p>
                                     <p> {itemCourse.created_at? itemCourse.created_at.split('-')[0] : ''} </p>
@@ -29,7 +27,7 @@ const CourseCard = ({dataCourses, description}) =>
                                 </div>
                                 <div className='card-container__title-autor-score-row__score-container__opinions-score-container'>
                                     <p> {itemCourse.rating} </p>
-                                    <p>(10 opiniones)</p>
+                                    {/* <p>(10 opiniones)</p> */}
                                 </div>
                             </div>
                         </div>
@@ -38,18 +36,11 @@ const CourseCard = ({dataCourses, description}) =>
                                 <img src={`http://127.0.0.1:8000/storage/${itemCourse.cover_image}`} alt="cover_image" />
                             </figure>
                             <div className='card-container__coverImage-tags-row__tags-container'>
-                                <figure className='card-container__coverImage-tags-row__tags-container__tagImage-container'>
-                                    <img src={logo} alt="tag_image" />
-                                </figure>
-                                <figure className='card-container__coverImage-tags-row__tags-container__tagImage-container'>
-                                    <img src={logo} alt="tag_image" />
-                                </figure>
-                                <figure className='card-container__coverImage-tags-row__tags-container__tagImage-container'>
-                                    <img src={logo} alt="tag_image" />
-                                </figure>
-                                <figure className='card-container__coverImage-tags-row__tags-container__tagImage-container'>
-                                    <img src={logo} alt="tag_image" />
-                                </figure>
+                                {itemCourse.technologies?.map(itemTechnology => (
+                                    <figure key={itemTechnology.id} className='card-container__coverImage-tags-row__tags-container__tagImage-container'>
+                                        <img src={`http://127.0.0.1:8000/storage/${itemTechnology.image}`} alt="tag-image" />
+                                    </figure>
+                                ))}
                             </div>
                         </div>
                         <div className='card-container__category-description-price-row'>
@@ -59,7 +50,8 @@ const CourseCard = ({dataCourses, description}) =>
                             </div>
                             <p className={`card-container__category-description-price-row__description --${!description ? 'oculto' : 'muestra'}`}>Description</p>
                             <div className='card-container__category-description-price-row__link-price-container'>
-                                <NavLink to={`/course-detail/${itemCourse.id}`}>Mas detalles</NavLink>
+                                <NavLink className={`--${!moreDetails ? 'oculto' : 'muestra'}`} to={`/course-detail/${itemCourse.id}`}>Mas detalles</NavLink>
+                                <NavLink className={`--${!goWebsite ? 'oculto' : 'muestra'}`} to={itemCourse.website} target='_blank' >Ir al curso</NavLink>
                                 <p> { itemCourse.price ? itemCourse.price==='Gratis' ? itemCourse.price : itemCourse.price +'€' : ''} </p>
                             </div>
                         </div>

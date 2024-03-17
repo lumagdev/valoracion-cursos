@@ -9,7 +9,7 @@
     <title>Laravel 10 vite with react</title>
 
     @viteReactRefresh
-    @vite('resources/js/index.jsx')
+    @vite(['resources/js/index.jsx', 'resources/css/app.css'])
 </head>
 
 <body>

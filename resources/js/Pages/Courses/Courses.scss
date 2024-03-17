@@ -16,10 +16,12 @@
 
     &__filters-buttons
     {
-        width: 68%;
+        width: 80%;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
         @include mobile
         {
             width: 86%;
@@ -35,8 +37,23 @@
                 @include mobile
                 {
                     font-size: 16px;
+                    width: 100%;
                 }
             }
+            @include mobile
+                {
+                    width: 100%;
+                }
+        }
+        &__order-by
+        {
+            font-size: 20px;
+            font-family: $PARAGRAPH;
+            background-color: $TURQUOISE;
+            border: 0;
+            border-radius: 5px;
+            padding: 0px 12px;
+            cursor: pointer;
         }
         & > div
         {
@@ -97,18 +114,23 @@
         {
             width: 86%;
         }
-        & > div
+        & > button
         {
             background-color: $TURQUOISE;
             font-size: 26px;
             font-family: $TEXT;
             border-radius: 8px;
+            border: 0;
+            cursor: pointer;
+            &:disabled {
+                cursor: not-allowed;
+            }
             @include mobile
             {
                 font-size: 20px;
             }
         }
-        & > div:nth-child(1)
+        & > button:nth-child(1)
         {
             text-align: start;
             padding: 0.5em 2em 0.5em 0.3em;
@@ -117,7 +139,7 @@
                 padding: 0.3em 1em 0.3em 0.3em;
             }
         }
-        & > div:nth-child(2)
+        & > button:nth-child(2)
         {
             text-align: end;
             padding: 0.5em 0.3em 0.5em 2em;
@@ -125,6 +147,30 @@
             {
                 padding: 0.3em 0.3em 0.3em 1em;
             }
+        }
+    }
+    &__section-form 
+    {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+        padding: 30px 50px;
+        background-color: $TURQUOISE;
+        border-radius: 7px;
+        @include mobile {
+            grid-template-columns: repeat(1, 1fr);
+            padding: 30px 20px;
+            gap: 20px;
+            border-radius: 5px;
+        }
+        & > select
+        {
+            font-size: 20px;
+            font-family: $PARAGRAPH;
+            background-color: $CANTALOUPE;
+            border: 0;
+            border-radius: 5px;
+            cursor: pointer;
         }
     }
 }
