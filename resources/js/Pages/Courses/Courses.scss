@@ -54,6 +54,11 @@
             border-radius: 5px;
             padding: 0px 12px;
             cursor: pointer;
+            & > option {
+                @include mobile {
+                    font-size: 12px;
+                }
+            }
         }
         & > div
         {
@@ -171,6 +176,14 @@
             border: 0;
             border-radius: 5px;
             cursor: pointer;
+            @include mobile {
+                font-size: 16px;
+            }
+            & > option {
+                @include mobile {
+                    font-size: 12px;
+                }
+            }
         }
     }
 }

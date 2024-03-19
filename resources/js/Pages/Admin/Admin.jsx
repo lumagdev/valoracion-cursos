@@ -273,7 +273,7 @@ const Admin = () =>
         name: yup.string().required('El nombre es obligatorio.'),
     });
 
-    const {register: registerPostTechnology, handleSubmit: handleSubmitPostTechnology, formState: { errors: errorsPostTechnology }, setValue: setValuePostTechnology, getValues: getValuesPostTechnology} = useForm({
+    const {register: registerPostTechnology, handleSubmit: handleSubmitPostTechnology, formState: { errors: errorsPostTechnology }} = useForm({
         resolver: yupResolver(schemaTechnology)
     });
 

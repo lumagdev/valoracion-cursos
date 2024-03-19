@@ -32,7 +32,7 @@ const Header = () =>
                     </div>
                     <ul className="header__nav__contenedor-menu1__ul menu1">
                         <li className="header__nav__contenedor-menu1__ul__li">
-                            <NavLink to={"/"}>Home</NavLink>
+                            <NavLink to={"/"}>Inicio</NavLink>
                         </li>
                         <li className="header__nav__contenedor-menu1__ul__li">
                             <NavLink to={"/courses-list"}>Cursos</NavLink>

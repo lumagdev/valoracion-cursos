@@ -6,18 +6,28 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    @include mobile {
+        padding: 120px 0px 50px 0px;
+    }
     &__profile-container
     {
         width: 72%;
         display: flex;
         flex-direction: column;
         gap: 2em;
+        @include mobile {
+            width: 85%;
+        }
+
         &__welcome-text
         {
             margin: 0;
             font-size: 38px;
             font-family: $TITLES;
             text-align: justify;
+            @include mobile {
+                font-size: 28px;
+            }
         }
 
         &__paragraph
@@ -25,6 +35,9 @@
             font-size: 30px;
             font-family: $PARAGRAPH;
             text-align: justify;
+            @include mobile {
+                font-size: 20px;
+            }
         }
 
         &__options-buttons
@@ -33,6 +46,10 @@
             display: flex;
             flex-direction: row;
             gap: 2.5em;
+            @include mobile {
+                width: 100%;
+                justify-content: center;
+            }
             
             & > button
             {
@@ -46,6 +63,10 @@
                 display: flex;
                 justify-content: center;
                 gap: 5px;
+                @include mobile {
+                    text-indent: -9999px;
+                    gap: 0;
+                }
             }
 
             & > button:hover
@@ -60,6 +81,13 @@
                 align-self: flex-end;
             }
         }
+        &__link-admin-container
+        {
+            font-size: 22px;
+            text-decoration: underline;
+            font-family: $TEXT;
+            font-weight: bold;
+        }
 
         &__reviews-list
         {
@@ -67,6 +95,9 @@
             display: flex;
             flex-direction: column;
             gap: 1.5em;
+            @include mobile {
+                align-items: center;
+            }
             &__title
             {
                 margin: 0;
@@ -83,18 +114,33 @@
                 display: flex;
                 flex-direction: column;
                 gap: 0.7em;
+                @include mobile {
+                    width: 100%;
+                    padding: 0.8em 0;
+                    align-items: center;
+                }
                 &__name-rating-container
                 {
                     display: flex;
                     justify-content: space-between;
+                    @include mobile {
+                        flex-direction: column;
+                    }
                     &__name-author
                     {
                         display: flex;
                         flex-direction: column;
+                        @include mobile {
+                            align-items: center;
+                            text-align: center;
+                        }
                         & > p:nth-child(1)
                         {
                             font-size: 25px;
                             font-family: $TITLES;
+                            @include mobile {
+                                font-size: 22px;
+                            }
                         }
                         & > p:nth-child(2)
                         {
@@ -109,6 +155,9 @@
                         flex-direction: row;
                         align-items: flex-start;
                         gap: 5px;
+                        @include mobile {
+                            justify-content: center;
+                        }
                         & > svg
                         {
                             font-size: 22px;
@@ -136,22 +185,20 @@
                     cursor: pointer;
                     transition: box-shadow 0.3s ease;
                     width: 20%;
+                    @include mobile {
+                        justify-content: center;
+                        width: 80%;
+                    }
                 }
                 &__allReview-button:hover
                 {
                     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
                 }
             }
-
-        }
-        &__link-admin-container
-        {
-            & > a
+            &__withoutReview
             {
+                font-size: 22px;
                 font-family: $TEXT;
-                font-size: 25px;
-                font-weight: bold;
-                text-decoration: underline;
             }
         }
 
@@ -163,7 +210,11 @@
         grid-template-columns: repeat(2, 1fr);
         gap: 40px;
         padding: 30px 50px;
-        
+        @include mobile {
+            grid-template-columns: repeat(1, 1fr);
+            padding: 30px 20px;
+            gap: 20px;
+        }
         & > div
         {
             display: flex;
@@ -173,6 +224,9 @@
                 margin-bottom: 8px;
                 font-size: 24px;
                 font-family: $TEXT;
+                @include mobile {
+                    font-size: 16px;
+                }
             }
             & > input
             {
@@ -181,6 +235,9 @@
                 border: 0;
                 background-color: transparent;
                 border-bottom: 6px solid $CANTALOUPE;
+                @include mobile {
+                    font-size: 16px;
+                }
             }
         }
     }

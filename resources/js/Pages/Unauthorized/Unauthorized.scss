@@ -8,7 +8,7 @@
     &__text
     {
         font-size: 40px;
-        font-family: $TITLES;
+        font-family: $TEXT_DECORATION;
         @include mobile
         {
             font-size: 25px;

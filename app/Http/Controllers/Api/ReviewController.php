@@ -144,7 +144,7 @@ class ReviewController extends Controller
         }
     }
 
-    public function updatedReview(Request $request, $id)
+    public function updateReview(Request $request, $id)
     {
         try 
         {
@@ -162,11 +162,13 @@ class ReviewController extends Controller
                 'comment' => 'string',
                 'user_id' => 'numeric',
                 'course_id' => 'numeric',
+                'answers' => 'array'
             ];
 
             $validations_messages = [
                 'required' => 'El campo :attribute es obligatorio.',
-                'numeric' => 'El campo :attribute debe ser numerico'
+                'numeric' => 'El campo :attribute debe ser numerico',
+                'array' => 'El campo :attribute debe ser un array'
             ];
         
             $this->validate($request, $validations, $validations_messages);
