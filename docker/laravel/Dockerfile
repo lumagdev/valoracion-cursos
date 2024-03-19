@@ -38,18 +38,11 @@ COPY ./laravel .
 
 RUN composer install
 
-COPY ./docker/laravel/default.conf /etc/nginx/conf.d/default.conf
-
 # Verificamos si el grupo www-data ya existe antes de intentar crearlo
 RUN getent passwd www-data || adduser -D -u 1000 -S www-data -G www-data
 
-# Copy existing application directory contents
-#COPY . /var/www
-
-# Change current user to www
 USER www-data
 
-# Expose port 9000 and start php-fpm server
-EXPOSE 80
+EXPOSE 8000
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["php-fpm"]

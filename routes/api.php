@@ -106,7 +106,6 @@ Route::middleware(['auth:sanctum'])->group(function ()
         // Users
         Route::put('/users/update/{id}', [UserController::class, 'updateUser'])->name('users.updateUser');
         // Reviews
-        Route::get('/reviews/course/{courseId}/user/{userId}/questions-answers', [ReviewController::class, 'getQuestionsAndAnswersForUserReview'])->name('reviews.questionsAndAnswersForUserReview');
     });
 
     /*--------------------------------- RUTAS EN COMÚN---------------------------------------- */
@@ -121,4 +120,5 @@ Route::middleware(['auth:sanctum'])->group(function ()
     Route::put('/reviews/update/{id}', [ReviewController::class, 'updateReview'])->name('reviews.updateReview');
     Route::delete('/reviews/delete/{id}', [ReviewController::class, 'deleteReview'])->name('reviews.deleteReview');
     Route::get('/reviews/reviews-by-user/{id}', [ReviewController::class, 'getAllReviewsOfAUser'])->name('reviews.allReviewsOfAUser');
+    Route::get('/reviews/course/{courseId}/user/{userId}/questions-answers', [ReviewController::class, 'getQuestionsAndAnswersForUserReview'])->name('reviews.questionsAndAnswersForUserReview');
 });

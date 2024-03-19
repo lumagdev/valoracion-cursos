@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Laravel 10 vite with react</title>
+    <title>Adictos al código</title>
 
     @viteReactRefresh
-    @vite(['resources/js/index.jsx', 'resources/css/app.css'])
+    @vite('resources/js/index.jsx')
 </head>
 
 <body>

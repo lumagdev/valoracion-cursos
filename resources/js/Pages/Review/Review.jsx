@@ -11,6 +11,7 @@ import { useAlertMessage } from '../../Hooks/alertMessage';
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { set, useForm } from "react-hook-form";
+import { putReview } from '../../Services/Review/putReview';
 
 const Review = () => 
 {
@@ -19,6 +20,8 @@ const Review = () =>
     let navigate = useNavigate();
     const {handleAlertMessage: successCreateReviewMessage, contextHolder: contextHolderCreateReviewSuccess} = useAlertMessage('success','La reseña ha sido creada con exito');
     const {handleAlertMessage: errorCreateReviewMessage, contextHolder: contextHolderCreateReviewError} = useAlertMessage('error','No se ha podido crear la reseña');
+    const {handleAlertMessage: successUpdateReviewMessage, contextHolder: contextHolderUpdateReviewSuccess} = useAlertMessage('success','La reseña ha sido actualizada con exito');
+    const {handleAlertMessage: errorUpdateReviewMessage, contextHolder: contextHolderUpdateReviewError} = useAlertMessage('error','No se ha podido actualizar la reseña');
     const [reviewOfAuthUser, setReviewOfAuthUser] = useState(null);
     const [answersWithQuestions, setAnswersWithQuestions] = useState([]); // [{"question_id":"", "content":""},{}]
     const [isQuestionnaireComplete, setIsQuestionnaireComplete] = useState(false);
@@ -31,14 +34,15 @@ const Review = () =>
         console.error(errorCourse.message);
     }
 
-    // const {isError: isErrorReviewQuestionnaire, data: dataReviewQuestionnaire, error:errorReviewQuestionnaire} = useQuery({
-    //     queryKey: ['reviewQuestionnaire'],
-    //     queryFn: () => getQuestionsAndAnswersByCourseForUserReview(id, user.id),
-    // });
-    // if (isErrorReviewQuestionnaire) {
-    //     console.error(errorReviewQuestionnaire.message);
-    // }
-    // console.log(dataReviewQuestionnaire);
+    const {isError: isErrorReviewQuestionnaire, data: dataReviewQuestionnaire, error:errorReviewQuestionnaire} = useQuery({
+        queryKey: ['reviewQuestionnaire'],
+        queryFn: () => getQuestionsAndAnswersByCourseForUserReview(id, user.id),
+        // enabled: reviewOfAuthUser ? true : false
+    });
+    if (isErrorReviewQuestionnaire) {
+        console.error(errorReviewQuestionnaire.message);
+    }
+    console.log('dataReviewQuestionnaire', dataReviewQuestionnaire);
 
     const {isError: isErrorQuestionsByCourse, data: dataQuestionsByCourse, error:errorQuestionsByCourse} = useQuery({
         queryKey: ['questionsByCourse'],
@@ -49,6 +53,7 @@ const Review = () =>
     }
 
     useEffect(() => {
+        console.log(dataQuestionsByCourse);
         // Comprobamos si el usuario autenticado ya realizo una review, si es asi lo guardamos para editar.
         if (dataQuestionsByCourse) 
         {
@@ -59,15 +64,6 @@ const Review = () =>
         }
     }, [dataQuestionsByCourse])
 
-    // useEffect(() => {
-    //     // Comprobamos si el usuario autenticado ya realizo una review, si es asi lo guardamos para editar.
-    //     if (dataCourse) 
-    //     {
-    //         const reviewAuthUser = dataCourse.data.flatMap(course => course.reviews.find(review => review.user_id === user.id));
-    //         console.log(reviewAuthUser);
-    //         setReviewOfAuthUser(reviewAuthUser);
-    //     }
-    // }, [dataCourse])
     //--------------------------------------------------CREATE REVIEW------------------------------------------------------------
     const schemaCreateReview = yup.object({
         user_rating: yup.number().required('El nombre es obligatorio.'),
@@ -75,7 +71,7 @@ const Review = () =>
         comment: yup.string().required('El campo comentario es obligatorio.'),
     });
 
-    const {register: registerCreateReview, handleSubmit: handleSubmitCreateReview, formState: { errors: errorsCreateReview }} = useForm({
+    const {register: registerCreateReview, handleSubmit: handleSubmitCreateReview, formState: { errors: errorsCreateReview }, setValue: setValueCreateReview} = useForm({
         resolver: yupResolver(schemaCreateReview)
     });
 
@@ -94,18 +90,48 @@ const Review = () =>
 
     const onSubmitPostReview = (dataForm) => 
     {
-        const completeAnswer = answersWithQuestions.some(answer => answer.content === "");
-        setIsQuestionnaireComplete(completeAnswer);
-        if (!completeAnswer) 
-        {
-            mutatePostReview({
-                user_rating: dataForm.user_rating,
-                title: dataForm.title,
-                comment: dataForm.comment,
-                user_id: user.id,
-                course_id: id,
-                answers: answersWithQuestions
+        if(reviewOfAuthUser){
+            const answers = [];
+
+            answersWithQuestions.forEach(a => {
+
+                const question = dataReviewQuestionnaire.find(q => {
+                    return q.questionId === a.question_id;
+                });
+
+                if(a.content){
+                    answers.push({
+                        id: question?.answerId,
+                        content: a.content
+                    })
+                }
+            })
+
+            mutatePutReview({
+                reviewData: {
+                    user_rating: dataForm.user_rating,
+                    title: dataForm.title,
+                    comment: dataForm.comment,
+                    user_id: user.id,
+                    course_id: id,
+                    answers
+                },
+                id: reviewOfAuthUser.id
             }) 
+        }else{
+            const completeAnswer = answersWithQuestions.some(answer => answer.content === "");
+            setIsQuestionnaireComplete(completeAnswer);
+            if (!completeAnswer) 
+            {
+                mutatePostReview({
+                    user_rating: dataForm.user_rating,
+                    title: dataForm.title,
+                    comment: dataForm.comment,
+                    user_id: user.id,
+                    course_id: id,
+                    answers: answersWithQuestions
+                }) 
+            }
         }
     };
     
@@ -123,7 +149,35 @@ const Review = () =>
 
     // ---------------------------------------------------------UPDATE REVIEW------------------------------------------------
 
-
+    const {mutate: mutatePutReview, error: errorPutReview} = useMutation({
+        mutationFn: putReview,
+        onSuccess: (data) => {
+            console.log(data);
+            successUpdateReviewMessage();
+            navigate(`/course-detail/${id}`);
+        },
+        onError: (e) => {
+            console.log(e);
+            errorUpdateReviewMessage();
+        }
+    });
+    
+    useEffect(() => {
+        // Comprobamos si el usuario autenticado ya realizo una review, si es asi lo guardamos para editar.
+        if (dataCourse) 
+        {
+            console.log('dataCourse', dataCourse);
+            // const reviewAuthUser = dataCourse.data.flatMap(course => course.reviews.find(review => review.user_id === user.id));
+            const reviewAuthUser = dataCourse?.data[0]?.reviews.find(review => review.user_id === user.id);
+            console.log('reviewAuthUser', reviewAuthUser);
+            if(reviewAuthUser){
+                setValueCreateReview('title', reviewAuthUser.title);
+                setValueCreateReview('comment', reviewAuthUser.comment);
+                setValueCreateReview('user_rating', reviewAuthUser.user_rating);
+                setReviewOfAuthUser(reviewAuthUser);
+            }
+        }
+    }, [dataCourse])
 
     // useEffect(() => {
     //     console.log(reviewOfAuthUser);

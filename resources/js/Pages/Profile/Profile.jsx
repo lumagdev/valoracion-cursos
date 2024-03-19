@@ -154,7 +154,7 @@ const Profile = () =>
                 {user?.role[0]==='common' ?
                 <div className='section-profile__profile-container__reviews-list'>
                     <h2 className='section-profile__profile-container__reviews-list__title'>Cursos valorados</h2>
-                    {dataReviewsByUser || dataReviewsByUser?.data.lenght > 0 ? 
+                    {dataReviewsByUser?.data.lenght > 0 ? 
                         dataReviewsByUser.data.map(itemData => {
                         let stars = StarsRating(itemData.user_rating);
                         return (
@@ -171,7 +171,7 @@ const Profile = () =>
                         </div>
                         )
                     })
-                    : <p>Aun no tienes ninguna reseña</p>}
+                    : <p className='section-profile__profile-container__reviews-list__withoutReview'>Aun no tienes ninguna reseña</p>}
                 </div>
                 :
                 <div className='section-profile__profile-container__link-admin-container'> <NavLink to={"/admin"}>Ir a administración</NavLink> </div> 
