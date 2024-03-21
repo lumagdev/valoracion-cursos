@@ -204,6 +204,7 @@ const Admin = () =>
             // Limpiando los setters
             setTechnologyImage(null);
             setFileQuestionsContent(null);
+            setSelectedTechnologiesOptions(null);
         },
         onError: (e) => {
             console.log(e);
@@ -791,7 +792,7 @@ const Admin = () =>
                             type="file"
                             id='image'
                             name='image'
-                            accept=".jpeg, .jpg, .png, .gif"
+                            accept=".jpeg, .jpg, .png, .svg"
                             onChange={handleTechnologyImage}
                         />
                         {errorPutTechnology?.response.data.errors && errorPutTechnology.response.data.errors.image && errorPutTechnology.response.data.errors.image[0] && <span> {errorPutTechnology.response.data.errors.image[0]} </span> }

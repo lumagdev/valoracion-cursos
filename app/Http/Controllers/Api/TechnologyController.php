@@ -62,7 +62,7 @@ class TechnologyController extends Controller
         {
             $validations = [
                 'name' => 'required',
-                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'image' => 'required|image|mimes:jpeg,png,jpg,svg,gif|max:2048',
             ];
 
             $validations_messages = [

@@ -45,6 +45,8 @@
                     border: 0;
                     background-color: #0ABAC2;
                     font-size: 21px;
+                    font-family: $TEXT;
+                    font-weight: bold;
                     padding: 0.5em;
                     border-radius: 7px;
                     cursor: pointer;
@@ -70,6 +72,8 @@
                 {
                     background-color: #0ABAC2;
                     font-size: 21px;
+                    font-family: $TEXT;
+                    font-weight: bold;
                     padding: 0.5em;
                     border-radius: 7px;
                     cursor: pointer;
@@ -77,6 +81,7 @@
                     display: flex;
                     justify-content: space-between;
                     width: 38%;
+                    
                     @include mobile {
                         text-indent: -9999px;
                         width: auto;
@@ -115,6 +120,7 @@
                         & > p
                         {
                             font-size: 21px;
+                            font-family: $TITLES;
                             font-weight: bold;
                         }
                         & > div
@@ -138,6 +144,7 @@
                     &__comment
                     {
                         font-size: 18px;
+                        font-family: $PARAGRAPH;
                     }
                     &__view-allReview-button
                     {
@@ -145,6 +152,8 @@
                         background-color: $TURQUOISE;
                         align-self: flex-end;
                         font-size: 18px;
+                        font-family: $TEXT;
+                        font-weight: bold;
                         padding: 0.6em;
                         border-radius: 7px;
                         cursor: pointer;
@@ -178,6 +187,7 @@
                     & > p
                     {
                         font-size: 22px;
+                        font-family: $TITLES;
                     }
                     & > div
                     {
@@ -200,6 +210,7 @@
                 &__allComment
                 {
                     font-size: 19px;
+                    font-family: $PARAGRAPH;
                 }
             }
 
@@ -220,10 +231,12 @@
                     {
                         font-weight: bold;
                         font-size: 21px;
+                        font-family: $TEXT;
                     }
                     &__answer
                     {
                         font-size: 19px;
+                        font-family: $PARAGRAPH;
                     }
                 }
             }

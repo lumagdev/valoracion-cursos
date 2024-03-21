@@ -45,7 +45,9 @@ const CourseCard = ({dataCourses, description, moreDetails, goWebsite}) =>
                         </div>
                         <div className='card-container__category-description-price-row'>
                             <div className='card-container__category-description-price-row__location-container'>
+                                <p> {itemCourse.category} </p>
                                 <p> {itemCourse.location} </p>
+                                
                                 {/* <FaYoutube /> */}
                             </div>
                             <p className={`card-container__category-description-price-row__description --${!description ? 'oculto' : 'muestra'}`}>Description</p>
